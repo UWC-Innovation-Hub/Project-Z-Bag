@@ -4,6 +4,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,6 +16,29 @@ namespace zSpace.Core.Samples
     public class Draggable :
         ZPointerInteractable, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        private Vector3 originalPosition; // Edits made by Yazeed
+
+        // Edits made by Yazeed
+        private void Start()
+        {
+            originalPosition = transform.position;
+        }
+
+        IEnumerator SmoothReturn()
+        {
+            float duration = 0.5f; // Time to return
+            float elapsed = 0f;
+
+            Vector3 startPosition = transform.position;
+            while (elapsed < duration)
+            {
+                transform.position = Vector3.Lerp(startPosition, originalPosition, elapsed / duration);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            transform.position = originalPosition;
+        }
+
         ////////////////////////////////////////////////////////////////////////
         // Public Methods
         ////////////////////////////////////////////////////////////////////////
@@ -107,6 +131,10 @@ namespace zSpace.Core.Samples
             {
                 rigidbody.isKinematic = this._isKinematic;
             }
+
+            // Edits's made by Yazeed
+            // transform.position = originalPosition;
+            StartCoroutine(SmoothReturn());
         }
 
         ////////////////////////////////////////////////////////////////////////
