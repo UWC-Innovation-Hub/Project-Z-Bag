@@ -8,8 +8,6 @@ public class CardManager : MonoBehaviour
     [SerializeField] private List<Material> materials; 
     [SerializeField] private Material backMaterial;
 
-    public Dictionary<GameObject, Material> cardFrontMaterials = new();
-
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] Transform cardSpawnPosition;
     private Vector3 startPosition = new(-2.5f, 2.25f, 1.25f);

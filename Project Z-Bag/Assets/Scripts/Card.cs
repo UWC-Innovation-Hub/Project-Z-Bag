@@ -8,6 +8,11 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private CardManager cardManager;
     [SerializeField] private GameObject cardVisual;
 
+    private readonly float rotationAngle = 180f;
+    private readonly float duration = 0.5f;
+
+    private bool isRotating = false;
+
     private void Start()
     {
         if (cardVisual == null)
@@ -19,20 +24,29 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        StartCoroutine(FlipCard());
+        if (!isRotating)
+            StartCoroutine(FlipCard());
     }
 
     // Flips the card 
     private IEnumerator FlipCard()
     {
-        // Rotate to reveal front
-        for (float t = 0; t <= 1; t += Time.deltaTime * 2)
+        isRotating = true;
+
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
         {
-            gameObject.transform.Rotate(Vector3.forward * 180f * t, Space.Self);
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         // Reset rotation
-        gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        transform.rotation = endRotation;
+        isRotating = false;
     }
 }
