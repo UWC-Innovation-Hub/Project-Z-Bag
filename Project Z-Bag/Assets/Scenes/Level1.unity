@@ -875,7 +875,7 @@ Transform:
   m_GameObject: {fileID: 749230420}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: -0.75, y: 2, z: -2.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1045,20 +1045,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec4bd1ed0d0b1f418376f78c1c8b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materials:
-  - {fileID: 2100000, guid: a4a9c16dde023f945866509aa0c595da, type: 2}
-  - {fileID: 2100000, guid: 62dafda47257cc94ea9a4f98014de386, type: 2}
-  - {fileID: 2100000, guid: ada9adea86b56734eaa454cef3fb3115, type: 2}
-  - {fileID: 2100000, guid: e995ff4adb36cad4eafcfe8f42c61839, type: 2}
-  - {fileID: 2100000, guid: 7096bf6f55ccaf6418c86f6bc4f7a9f5, type: 2}
-  - {fileID: 2100000, guid: 4a295efd02364d340a993e5184ac7b8f, type: 2}
-  - {fileID: 2100000, guid: 360607b7ea8f2884bb65080cd519194c, type: 2}
-  - {fileID: 2100000, guid: 371fc4c7aa13b86428be2b759e95826c, type: 2}
-  - {fileID: 2100000, guid: 71cf2e0d8a1aab04697c816c9c2c604f, type: 2}
-  - {fileID: 2100000, guid: e83a6e1656d7f2f499dc3540280e3b0c, type: 2}
-  - {fileID: 2100000, guid: 68d6320523cda2c4b8aa204acee14e88, type: 2}
-  - {fileID: 2100000, guid: ff94c65feef6e2d4288a7eae68dd0586, type: 2}
-  backMaterial: {fileID: 2100000, guid: 8d92bdacfe1cde04bac457f52a4d5a9b, type: 2}
   cardPrefab: {fileID: 2683480832845368359, guid: bd723dea3929c3f4185150af74bf4065,
     type: 3}
   cardSpawnPosition: {fileID: 1367529785}

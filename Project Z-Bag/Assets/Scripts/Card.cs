@@ -12,6 +12,10 @@ public class Card : MonoBehaviour , IPointerClickHandler
     private readonly float duration = 0.5f;
 
     private bool isRotating = false;
+    private bool isRotated = false;
+
+    Quaternion startRotation;
+    Quaternion endRotation;
 
     private void Start()
     {
@@ -20,6 +24,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
             Debug.LogError("Card visual not assigned.");
             return;
         }
+
+        startRotation = transform.rotation;
+        endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -32,21 +39,22 @@ public class Card : MonoBehaviour , IPointerClickHandler
     private IEnumerator FlipCard()
     {
         isRotating = true;
-
-        Quaternion startRotation = transform.rotation;
-        Quaternion endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
-
         float elapsedTime = 0f;
+
+        Quaternion initialRotation = isRotated ? endRotation : startRotation;
+        Quaternion targetRotation = isRotated ? startRotation : endRotation;
 
         while (elapsedTime < duration)
         {
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsedTime / duration);
+            float t = Mathf.Clamp01(elapsedTime / duration); // Ensures 't' stays in [0, 1]
+            transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        // Reset rotation
-        transform.rotation = endRotation;
+        // Ensure final rotation after coroutine finshes
+        transform.rotation = targetRotation;
+        isRotated = !isRotated;
         isRotating = false;
     }
 }

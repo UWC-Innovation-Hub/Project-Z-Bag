@@ -5,16 +5,14 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
-    [SerializeField] private List<Material> materials; 
-    [SerializeField] private Material backMaterial;
-
     [SerializeField] private GameObject cardPrefab;
+
     [SerializeField] Transform cardSpawnPosition;
+
     private Vector3 startPosition = new(-2.5f, 2.25f, 1.25f);
+    private Vector3 offset = new(1.5f, 1.52f);
 
     private readonly List<GameObject> cardList = new();
-
-    private Vector3 offset = new(1.5f, 1.52f);
 
     // Start is called before the first frame update
     void Start()
