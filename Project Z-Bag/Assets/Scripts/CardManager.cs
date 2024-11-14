@@ -6,7 +6,6 @@ using UnityEngine;
 public class CardManager : MonoBehaviour
 {
     [SerializeField] private GameObject cardPrefab;
-
     [SerializeField] Transform cardSpawnPosition;
 
     private Vector3 startPosition = new(-2.5f, 2.25f, 1.25f);
@@ -30,7 +29,7 @@ public class CardManager : MonoBehaviour
             {
                 var tempCard = (GameObject)Instantiate(cardPrefab, cardSpawnPosition.position, cardSpawnPosition.transform.rotation);
 
-                tempCard.name = $"{tempCard.name} Row{i} Col{j}";
+                tempCard.name = $"{"Card {i} Col{j}"}";
                 cardList.Add(tempCard);
             }
         }
@@ -57,10 +56,12 @@ public class CardManager : MonoBehaviour
     {
         var randomDistance = 7;
 
-        while (card.transform.position != targetPosition)
+        while (Vector3.Distance(card.transform.position, targetPosition) > 0.01f)
         {
             card.transform.position = Vector3.MoveTowards(card.transform.position, targetPosition, randomDistance * Time.deltaTime);
-            yield return 0;
+            yield return null;
         }
+
+        card.transform.position = targetPosition; // Snap to the target position at the end
     }
 }

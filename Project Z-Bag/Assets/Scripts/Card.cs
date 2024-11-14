@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
-    [SerializeField] private CardManager cardManager;
     [SerializeField] private GameObject cardVisual;
 
     private readonly float rotationAngle = 180f;
@@ -41,6 +39,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         isRotating = true;
         float elapsedTime = 0f;
 
+        // Check if the card is rotated or not
         Quaternion initialRotation = isRotated ? endRotation : startRotation;
         Quaternion targetRotation = isRotated ? startRotation : endRotation;
 
@@ -56,5 +55,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         transform.rotation = targetRotation;
         isRotated = !isRotated;
         isRotating = false;
+
+        Debug.Log($"Card is now {(isRotated ? "rotated" : "unrotated")}");
     }
 }
