@@ -1,10 +1,15 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
-    [SerializeField] private GameObject cardVisual;
+    public GameObject cardVisual;
+
+    public int CardID { get; private set; } // Unique ID for each card
+
+    private CardManager cardManager;
 
     private readonly float rotationAngle = 180f;
     private readonly float duration = 0.5f;
@@ -27,10 +32,25 @@ public class Card : MonoBehaviour , IPointerClickHandler
         endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
     }
 
+    public void Initialise(int id, CardManager cardManager)
+    {
+        CardID = id;
+        this.cardManager = cardManager;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isRotating)
+        if (!isRotating && !cardManager.IsChecking)
+        {
             StartCoroutine(FlipCard());
+            cardManager.OnCardFlipped(this); // Notify manager about the flip
+        }
+    }
+
+    // Helper function to flip the card back to its original state
+    public void FlipCardExternally()
+    {
+        StartCoroutine(FlipCard());
     }
 
     // Flips the card 
