@@ -19,5 +19,6 @@ public class ItemManager : MonoBehaviour
         GameObject itemObject = Instantiate(itemPrefab, itemPrefab.transform.position, itemPrefab.transform.rotation);
 
 
+        itemObject.SetActive(true);
     }
 }

@@ -1,55 +1,81 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
-    [SerializeField] private GameObject cardVisual;
-    [SerializeField] private float fadeAmount = 0f;
-    [SerializeField] private float fadeSpeed = 1f;
-    private bool isFaded = false;
-    private Material originalMaterial;
+    public GameObject cardVisual;
+
+    public int CardID { get; private set; } // Unique ID for each card
+
+    private CardManager cardManager;
+
+    private readonly float rotationAngle = 180f;
+    private readonly float duration = 0.5f;
+
+    private bool isRotating = false;
+    private bool isRotated = false;
+
+    Quaternion startRotation;
+    Quaternion endRotation;
 
     private void Start()
     {
-        originalMaterial = cardVisual.GetComponent<Renderer>().material;
+        if (cardVisual == null)
+        {
+            Debug.LogError("Card visual not assigned.");
+            return;
+        }
+
+        startRotation = transform.rotation;
+        endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
+    }
+
+    public void Initialise(int id, CardManager cardManager)
+    {
+        CardID = id;
+        this.cardManager = cardManager;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isFaded)
+        if (!isRotating && !cardManager.IsChecking)
         {
-            // If the object is currently faded, fade it back to full opacity
-            Debug.Log("Fading back in");
-            StartCoroutine(FadeCard(originalMaterial.color.a, 1f));
+            StartCoroutine(FlipCard());
+            cardManager.OnCardFlipped(this); // Notify manager about the flip
         }
-        else
-        {
-            // If the object is not faded, fade it to the target opacity (faded)
-            Debug.Log("The object has been clicked");
-            StartCoroutine(FadeCard(originalMaterial.color.a, fadeAmount));
-        }
-
-        // Toggle faded state so it only changes once per click
-        isFaded = !isFaded;
     }
 
-    private IEnumerator FadeCard( float startAlpha, float targetAlpha)
+    // Helper function to flip the card back to its original state
+    public void FlipCardExternally()
     {
-        float elapsedTime = 0f;
-        Color startColor = new(originalMaterial.color.r, originalMaterial.color.g, originalMaterial.color.b, startAlpha);
-        Color targetColor = new(startColor.r, startColor.g, startColor.b, targetAlpha);
+        StartCoroutine(FlipCard());
+    }
 
-        while (elapsedTime < fadeSpeed)
+    // Flips the card 
+    private IEnumerator FlipCard()
+    {
+        isRotating = true;
+        float elapsedTime = 0f;
+
+        // Check if the card is rotated or not
+        Quaternion initialRotation = isRotated ? endRotation : startRotation;
+        Quaternion targetRotation = isRotated ? startRotation : endRotation;
+
+        while (elapsedTime < duration)
         {
-            // Interpolate the alpha value over time
-            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeSpeed);
-            originalMaterial.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            float t = Mathf.Clamp01(elapsedTime / duration); // Ensures 't' stays in [0, 1]
+            transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        // Ensure the final colour is set
-        originalMaterial.color = targetColor;
+        // Ensure final rotation after coroutine finshes
+        transform.rotation = targetRotation;
+        isRotated = !isRotated;
+        isRotating = false;
+
+        Debug.Log($"Card is now {(isRotated ? "rotated" : "unrotated")}");
     }
 }
