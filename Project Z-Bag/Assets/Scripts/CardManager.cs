@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CardManager : MonoBehaviour
 {
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform cardSpawnPosition;
 
-    [SerializeField] private Material[] materials; 
+    [SerializeField] private Material[] materials;
+
+    public UnityEvent OnMatchFound;
 
     private readonly Dictionary<int, List<Card>> cardPairs = new();
     private readonly List<Card> currentlyFlipped = new();
@@ -61,6 +64,7 @@ public class CardManager : MonoBehaviour
         return cardIDs;
     }
 
+    // Assign materials to the cards ensuring that the cards with the same ID get's the same material
     private void AssignMaterialsToCardPairs(Dictionary<int, List<Card>> cardPairs)
     {
         if (materials == null || materials.Length == 0)
@@ -154,6 +158,7 @@ public class CardManager : MonoBehaviour
             Debug.Log("Match found!");
             firstCard.gameObject.SetActive(false);
             secondCard.gameObject.SetActive(false);
+            OnMatchFound.Invoke();
         }
         else
         {
