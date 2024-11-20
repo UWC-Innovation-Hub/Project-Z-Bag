@@ -748,6 +748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardManager: {fileID: 826006363}
+  itemSpawnPosition: {fileID: 258507012}
   items:
   - {fileID: 4859484301758364068, guid: 607cb1c95ae8ac1428438806a2539e84, type: 3}
   - {fileID: 2105780851686215485, guid: c36fbda08190f17408a86b685f055820, type: 3}
@@ -755,7 +756,6 @@ MonoBehaviour:
   - {fileID: 7559796534400059643, guid: 03ab1713f5d322e43bc400d4f02eb1d4, type: 3}
   - {fileID: 767771664486126993, guid: 88103f17eea976b4cadd1f8959407399, type: 3}
   - {fileID: 2942542287148990670, guid: cb36e04be6786294ab67247e942afbe5, type: 3}
-  itemSpawnPosition: {fileID: 258507012}
 --- !u!4 &483931971
 Transform:
   m_ObjectHideFlags: 0

@@ -4,41 +4,39 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     [SerializeField] private CardManager cardManager;
-    [SerializeField] private List<Item> items = new();
     [SerializeField] private GameObject itemSpawnPosition;
+    [SerializeField] private List<Item> items = new();
 
     private void Start()
     {
-        cardManager.OnMatchFound.AddListener(DisplayObject);
+        cardManager.OnMatchFound.AddListener(DisplayItem);
         AssignItemID();
-        foreach (Item item in items)
-            Debug.Log($"ItemID: {item.ItemID}");
     }
 
-    // Assign the Item ID based on the card ID
+    // Assign the ItemID based on the card CardID's found in the dictionary 
     private void AssignItemID()
     {
         IReadOnlyDictionary<int, List<Card>> cardPairs = cardManager.CardPairs;
         int index = 0;
 
-        Debug.Log($"Dict count: {cardPairs.Count}");
-
         foreach (int key in cardPairs.Keys)
         {
-            Debug.Log($"Dict keys: {key}");
             items[index].Initialize(key);
             index++;
         }
 
     }
 
-    private void DisplayObject()
+    // Search the list for the item with the ItemID that matches the currently flipped cards CardID
+    private void DisplayItem()
     {
         IReadOnlyList<Card> currentlyFlipped = cardManager.CurrentlyFlipped;
 
+        Card currentlyFlippedCard = currentlyFlipped[0];
+
         foreach (Item item in items)
         {
-            if (item.ItemID == currentlyFlipped[0].CardID)
+            if (item.ItemID == currentlyFlippedCard.CardID)
             {
                 Instantiate(item, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
             }

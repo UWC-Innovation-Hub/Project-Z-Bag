@@ -7,8 +7,6 @@ public class Item : MonoBehaviour
     public GameObject itemVisual;
     public int ItemID { get; private set; } // Unique ID for each item
 
-    private ItemManager itemManager;
-
     private void Start()
     {
         if (itemVisual == null)
@@ -20,6 +18,5 @@ public class Item : MonoBehaviour
     public void Initialize(int id)
     {
         ItemID = id;
-        //this.itemManager = itemManager;
     }
 }
