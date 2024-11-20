@@ -1,7 +1,5 @@
-
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,20 +10,29 @@ public class CardManager : MonoBehaviour
 
     [SerializeField] private Material[] materials;
 
-    public UnityEvent OnMatchFound;
+    [HideInInspector] public UnityEvent OnMatchFound;
 
     private readonly Dictionary<int, List<Card>> cardPairs = new();
     private readonly List<Card> currentlyFlipped = new();
 
     public bool IsChecking { get; private set; } = false; // Prevent input during checking
 
+    // Expose cardPairs as a read-only property
+    public IReadOnlyDictionary<int, List<Card>> CardPairs => cardPairs;
+    public IReadOnlyList<Card> CurrentlyFlipped => currentlyFlipped;
+
+
     private Vector3 startPosition = new(-2.5f, 2.25f, 1.25f);
     private Vector3 offset = new(1.5f, 1.52f);
+
+    private void Awake()
+    {
+        SpawnCardMesh(3, 4);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnCardMesh(3, 4);
         MoveCard(3, 4, startPosition, offset);
     }
 
@@ -156,8 +163,8 @@ public class CardManager : MonoBehaviour
         if (firstCard.CardID == secondCard.CardID)
         {
             Debug.Log("Match found!");
-            firstCard.gameObject.SetActive(false);
-            secondCard.gameObject.SetActive(false);
+            Destroy(firstCard.gameObject);
+            Destroy(secondCard.gameObject);
             OnMatchFound.Invoke();
         }
         else
@@ -192,5 +199,11 @@ public class CardManager : MonoBehaviour
             cardList.AddRange(pair);
         }
         return cardList;
+    }
+
+    // Expose dictionary of cards
+    public IReadOnlyDictionary<int, List<Card>> GetCardPairs()
+    {
+        return cardPairs;
     }
 }

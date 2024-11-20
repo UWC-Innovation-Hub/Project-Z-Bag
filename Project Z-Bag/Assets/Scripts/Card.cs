@@ -40,7 +40,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isRotating && !cardManager.IsChecking)
+        if (!isRotating && !cardManager.IsChecking && !isRotated)
         {
             StartCoroutine(FlipCard());
             cardManager.OnCardFlipped(this); // Notify manager about the flip
