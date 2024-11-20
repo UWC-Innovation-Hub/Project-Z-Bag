@@ -200,10 +200,4 @@ public class CardManager : MonoBehaviour
         }
         return cardList;
     }
-
-    // Expose dictionary of cards
-    public IReadOnlyDictionary<int, List<Card>> GetCardPairs()
-    {
-        return cardPairs;
-    }
 }
