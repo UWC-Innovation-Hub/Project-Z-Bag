@@ -17,11 +17,11 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Public fields
-    public bool isDisplayingItem = false;
+    public bool isDisplayingItem { get; private set; } = false;
     #endregion
 
     #region Private fields
-    private float _destroyAfterTime = 3.0f;
+    private readonly float _destroyAfterTime = 3.0f;
     #endregion
 
     private void Start()

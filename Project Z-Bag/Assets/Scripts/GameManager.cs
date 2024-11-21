@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Public Fields
+    public bool IsChecking { get; private set; } = false; // Prevent input during checking
+    #endregion
+
     #region Private Fields
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
@@ -19,8 +23,6 @@ public class GameManager : MonoBehaviour
     #region Unity Events
     [HideInInspector] public UnityEvent OnMatchFound;
     #endregion
-
-    public bool IsChecking { get; private set; } = false; // Prevent input during checking
 
     // Adds the currently flipped card to the list. Notified by the Card.
     public void OnCardFlipped(Card flippedCard)
