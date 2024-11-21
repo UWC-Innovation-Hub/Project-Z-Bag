@@ -58,8 +58,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Match found!");
             Destroy(firstCard.gameObject);
             Destroy(secondCard.gameObject);
-            OnMatchFound.Invoke();
             _score++;
+            OnMatchFound.Invoke();
         }
         else
         {
@@ -74,8 +74,10 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        Debug.Log($"Score: {_score}");
         if (_score != 6)
             return;
+        Debug.Log($"Game Over");
         gameOverPanel.SetActive(true);
     }
 
