@@ -26,8 +26,8 @@ public class CardManager : MonoBehaviour
     private readonly Dictionary<int, List<Card>> _cardPairs = new();
 
     // Positioning
-    private Vector3 _startPosition = new(-2.5f, 2.25f, 1.25f);
-    private Vector3 _offset = new(1.5f, 1.52f);
+    private Vector3 _startPosition = new(-2.5f, 1.75f, 0f);
+    private Vector3 _offset = new(1.5f, 1.5f);
     #endregion
 
     #region Public Properties

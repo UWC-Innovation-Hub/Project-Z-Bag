@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ItemManager : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class ItemManager : MonoBehaviour
 
     #region Public fields
     public bool isDisplayingItem { get; private set; } = false;
+    #endregion
+
+    #region Unity Events
+    [HideInInspector] public UnityEvent OnObjectDestroyed;
     #endregion
 
     #region Private fields
@@ -59,6 +64,7 @@ public class ItemManager : MonoBehaviour
             {
                 GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 Destroy(displayedItem, _destroyAfterTime);
+                OnObjectDestroyed?.Invoke();
             }
         }
 

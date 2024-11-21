@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Serialized Fields
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private ItemManager itemManager;
+    #endregion
+
     #region Public Fields
     public bool IsChecking { get; private set; } = false; // Prevent input during checking
     #endregion
@@ -13,6 +18,7 @@ public class GameManager : MonoBehaviour
     #region Private Fields
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
+    private int _score = 0;
     #endregion
 
     #region Properties
@@ -23,6 +29,11 @@ public class GameManager : MonoBehaviour
     #region Unity Events
     [HideInInspector] public UnityEvent OnMatchFound;
     #endregion
+
+    private void Start()
+    {
+        itemManager.OnObjectDestroyed.AddListener(GameOver);
+    }
 
     // Adds the currently flipped card to the list. Notified by the Card.
     public void OnCardFlipped(Card flippedCard)
@@ -48,6 +59,7 @@ public class GameManager : MonoBehaviour
             Destroy(firstCard.gameObject);
             Destroy(secondCard.gameObject);
             OnMatchFound.Invoke();
+            _score++;
         }
         else
         {
@@ -60,9 +72,21 @@ public class GameManager : MonoBehaviour
         IsChecking = false;
     }
 
+    private void GameOver()
+    {
+        if (_score != 6)
+            return;
+        gameOverPanel.SetActive(true);
+    }
+
     public void LoadGameScene()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void LoadMainMenuScene()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void ExitApplication()
