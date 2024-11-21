@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     public bool IsChecking { get; private set; } = false; // Prevent input during checking
 
+    // Adds the currently flipped card to the list. Notified by the Card.
     public void OnCardFlipped(Card flippedCard)
     {
         Debug.Log("Checking if two cards are flipped");

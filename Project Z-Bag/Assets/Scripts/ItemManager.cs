@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ItemManager : MonoBehaviour
@@ -13,6 +14,14 @@ public class ItemManager : MonoBehaviour
 
     [Header("Items")]
     [SerializeField] private List<Item> items = new();
+    #endregion
+
+    #region Public fields
+    public bool isDisplayingItem = false;
+    #endregion
+
+    #region Private fields
+    private float _destroyAfterTime = 3.0f;
     #endregion
 
     private void Start()
@@ -38,6 +47,8 @@ public class ItemManager : MonoBehaviour
     // Search the list for the item with the ItemID that matches the currently flipped cards CardID
     private void DisplayItem()
     {
+        isDisplayingItem = true;
+
         IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
 
         Card currentlyFlippedCard = currentlyFlipped[0];
@@ -46,8 +57,11 @@ public class ItemManager : MonoBehaviour
         {
             if (item.ItemID == currentlyFlippedCard.CardID)
             {
-                Instantiate(item, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
+                GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
+                Destroy(displayedItem, _destroyAfterTime);
             }
         }
+
+        isDisplayingItem = false;
     }
 }

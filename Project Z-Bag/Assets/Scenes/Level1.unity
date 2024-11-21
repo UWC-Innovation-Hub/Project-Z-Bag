@@ -751,12 +751,12 @@ MonoBehaviour:
   gameManager: {fileID: 1553352683}
   itemSpawnPosition: {fileID: 258507012}
   items:
-  - {fileID: 4859484301758364068, guid: 607cb1c95ae8ac1428438806a2539e84, type: 3}
-  - {fileID: 2105780851686215485, guid: c36fbda08190f17408a86b685f055820, type: 3}
-  - {fileID: 7144982118425426858, guid: 48fe7ec3d28a62649ac2ad5e39bf6c90, type: 3}
-  - {fileID: 7559796534400059643, guid: 03ab1713f5d322e43bc400d4f02eb1d4, type: 3}
-  - {fileID: 767771664486126993, guid: 88103f17eea976b4cadd1f8959407399, type: 3}
-  - {fileID: 2942542287148990670, guid: cb36e04be6786294ab67247e942afbe5, type: 3}
+  - {fileID: -6364012373780598528, guid: b8d991d104bfbef43ac94a259468e9b1, type: 3}
+  - {fileID: -6364012373780598528, guid: aea419b7aac00fe48b5be53031693c7f, type: 3}
+  - {fileID: -6364012373780598528, guid: 8d9ad4cf389e2494bb0cd54f7c8e7abf, type: 3}
+  - {fileID: -6364012373780598528, guid: 0e7a7a6af1a91134984e43441ba278be, type: 3}
+  - {fileID: -6364012373780598528, guid: cebac1bb3292e4d4a9de790d374830b8, type: 3}
+  - {fileID: -6364012373780598528, guid: 422d738c72b49984da5ab9b7a3aa03d2, type: 3}
 --- !u!4 &483931971
 Transform:
   m_ObjectHideFlags: 0
@@ -1624,7 +1624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f200faf79ffebce4d8ff642f7cca6976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 1414013971298439191, guid: bd723dea3929c3f4185150af74bf4065, type: 3}
   OnMatchFound:
     m_PersistentCalls:
       m_Calls: []
