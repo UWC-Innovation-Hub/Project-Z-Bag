@@ -5,35 +5,42 @@ using UnityEngine.Events;
 
 public class CardManager : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Managers & Prefabs")]
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject cardPrefab;
+
+    [Header("Spawn Configuration")]
     [SerializeField] private Transform cardSpawnPosition;
 
+    [Header("Materials")]
     [SerializeField] private Material[] materials;
+    #endregion
 
-    [HideInInspector] public UnityEvent OnMatchFound;
+    #region Unity Events
+    [HideInInspector] public UnityEvent OnCardSpawn;
+    #endregion
 
-    private readonly Dictionary<int, List<Card>> cardPairs = new();
-    private readonly List<Card> currentlyFlipped = new();
+    #region Private Variables
+    // Card data
+    private readonly Dictionary<int, List<Card>> _cardPairs = new();
 
-    public bool IsChecking { get; private set; } = false; // Prevent input during checking
+    // Positioning
+    private Vector3 _startPosition = new(-2.5f, 2.25f, 1.25f);
+    private Vector3 _offset = new(1.5f, 1.52f);
+    #endregion
 
+    #region Public Properties
     // Expose cardPairs as a read-only property
-    public IReadOnlyDictionary<int, List<Card>> CardPairs => cardPairs;
-    public IReadOnlyList<Card> CurrentlyFlipped => currentlyFlipped;
+    public IReadOnlyDictionary<int, List<Card>> CardPairs => _cardPairs;
+    #endregion
 
-
-    private Vector3 startPosition = new(-2.5f, 2.25f, 1.25f);
-    private Vector3 offset = new(1.5f, 1.52f);
-
-    private void Awake()
-    {
-        SpawnCardMesh(3, 4);
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        MoveCard(3, 4, startPosition, offset);
+        SpawnCardMesh(3, 4);
+        MoveCard(3, 4, _startPosition, _offset);
     }
 
     // Spawns a collection of cards at the spawn position and then stores it in a list
@@ -45,16 +52,17 @@ public class CardManager : MonoBehaviour
         {
             GameObject cardObject = Instantiate(cardPrefab, cardSpawnPosition.position, cardSpawnPosition.transform.rotation);
             Card card = cardObject.GetComponent<Card>();
-            card.Initialise(cardIDs[i], this);
+            card.Initialise(cardIDs[i], gameManager);
 
-            if (!cardPairs.ContainsKey(cardIDs[i]))
-                cardPairs[cardIDs[i]] = new List<Card>();
+            if (!_cardPairs.ContainsKey(cardIDs[i]))
+                _cardPairs[cardIDs[i]] = new List<Card>();
 
             card.name = $"Card {i}";
-            cardPairs[cardIDs[i]].Add(card);
+            _cardPairs[cardIDs[i]].Add(card);
         }
 
-        AssignMaterialsToCardPairs(cardPairs);
+        AssignMaterialsToCardPairs(_cardPairs);
+        OnCardSpawn?.Invoke();
     }
 
     // Generates a list of cardIDs
@@ -141,43 +149,6 @@ public class CardManager : MonoBehaviour
         card.transform.position = targetPosition; // Snap to the target position at the end
     }
 
-    public void OnCardFlipped(Card flippedCard)
-    {
-        currentlyFlipped.Add(flippedCard);
-
-        if (currentlyFlipped.Count == 2)
-        {
-            IsChecking = true;
-            StartCoroutine(CheckForMatch());
-        }
-    }
-
-    // Check if the two currently flipped cards having matching card ID's
-    private IEnumerator CheckForMatch()
-    {
-        yield return new WaitForSeconds(0.5f); // Delay for better UI
-
-        Card firstCard = currentlyFlipped[0];
-        Card secondCard = currentlyFlipped[1];
-
-        if (firstCard.CardID == secondCard.CardID)
-        {
-            Debug.Log("Match found!");
-            Destroy(firstCard.gameObject);
-            Destroy(secondCard.gameObject);
-            OnMatchFound.Invoke();
-        }
-        else
-        {
-            Debug.Log("No match!");
-            firstCard.FlipCardExternally();
-            secondCard.FlipCardExternally();
-        }
-
-        currentlyFlipped.Clear();
-        IsChecking = false;
-    }
-
     // Uses the Fisher-Yates shuffle
     private void ShuffleCards<T>(List<T> cardList)
     {
@@ -194,7 +165,7 @@ public class CardManager : MonoBehaviour
     private List<Card> FlattenCardPairs()
     {
         List<Card> cardList = new();
-        foreach (var pair in cardPairs.Values)
+        foreach (var pair in _cardPairs.Values)
         {
             cardList.AddRange(pair);
         }

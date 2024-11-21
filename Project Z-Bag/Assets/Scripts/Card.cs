@@ -1,24 +1,39 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
+    #region Public Fields
     public GameObject cardVisual;
+    #endregion
 
+    #region Properties
     public int CardID { get; private set; } // Unique ID for each card
+    #endregion
 
-    private CardManager cardManager;
+    #region Unity Events
+    [HideInInspector] public UnityEvent<Card> OnCardRotation;
+    #endregion
 
-    private readonly float rotationAngle = 180f;
-    private readonly float duration = 0.5f;
+    #region Private Fields
+    // References
+    private GameManager gameManager;
 
-    private bool isRotating = false;
-    private bool isRotated = false;
+    // Animation settings
+    private readonly float _rotationAngle = 180f;
+    private readonly float _duration = 0.5f;
 
-    Quaternion startRotation;
-    Quaternion endRotation;
+    // State
+    private bool _isRotating = false;
+    private bool _isRotated = false;
+
+    // Rotation data
+    private Quaternion _startRotation;
+    private Quaternion _endRotation;
+    #endregion
 
     private void Start()
     {
@@ -28,22 +43,22 @@ public class Card : MonoBehaviour , IPointerClickHandler
             return;
         }
 
-        startRotation = transform.rotation;
-        endRotation = startRotation * Quaternion.Euler(0, 0, rotationAngle);
+        _startRotation = transform.rotation;
+        _endRotation = _startRotation * Quaternion.Euler(0, 0, _rotationAngle);
     }
 
-    public void Initialise(int id, CardManager cardManager)
+    public void Initialise(int id, GameManager gameManager)
     {
         CardID = id;
-        this.cardManager = cardManager;
+        this.gameManager = gameManager;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isRotating && !cardManager.IsChecking && !isRotated)
+        if (!_isRotating && !gameManager.IsChecking && !_isRotated)
         {
             StartCoroutine(FlipCard());
-            cardManager.OnCardFlipped(this); // Notify manager about the flip
+            gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
         }
     }
 
@@ -56,16 +71,16 @@ public class Card : MonoBehaviour , IPointerClickHandler
     // Flips the card 
     private IEnumerator FlipCard()
     {
-        isRotating = true;
+        _isRotating = true;
         float elapsedTime = 0f;
 
         // Check if the card is rotated or not
-        Quaternion initialRotation = isRotated ? endRotation : startRotation;
-        Quaternion targetRotation = isRotated ? startRotation : endRotation;
+        Quaternion initialRotation = _isRotated ? _endRotation : _startRotation;
+        Quaternion targetRotation = _isRotated ? _startRotation : _endRotation;
 
-        while (elapsedTime < duration)
+        while (elapsedTime < _duration)
         {
-            float t = Mathf.Clamp01(elapsedTime / duration); // Ensures 't' stays in [0, 1]
+            float t = Mathf.Clamp01(elapsedTime / _duration); // Ensures 't' stays in [0, 1]
             transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -73,9 +88,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
         // Ensure final rotation after coroutine finshes
         transform.rotation = targetRotation;
-        isRotated = !isRotated;
-        isRotating = false;
+        _isRotated = !_isRotated;
+        _isRotating = false;
 
-        Debug.Log($"Card is now {(isRotated ? "rotated" : "unrotated")}");
+        Debug.Log($"Card is now {(_isRotated ? "rotated" : "unrotated")}");
     }
 }

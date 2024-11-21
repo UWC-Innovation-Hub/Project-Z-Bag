@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    #region Public Fields
     public GameObject itemVisual;
+    #endregion
+
+    #region Properties
     public int ItemID { get; private set; } // Unique ID for each item
+    #endregion
 
     private void Start()
     {

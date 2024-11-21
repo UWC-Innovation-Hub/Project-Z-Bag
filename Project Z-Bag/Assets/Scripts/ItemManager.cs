@@ -3,14 +3,22 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Managers")]
     [SerializeField] private CardManager cardManager;
+    [SerializeField] private GameManager gameManager;
+
+    [Header("Spawn Configuration")]
     [SerializeField] private GameObject itemSpawnPosition;
+
+    [Header("Items")]
     [SerializeField] private List<Item> items = new();
+    #endregion
 
     private void Start()
     {
-        cardManager.OnMatchFound.AddListener(DisplayItem);
-        AssignItemID();
+        gameManager.OnMatchFound.AddListener(DisplayItem);
+        cardManager.OnCardSpawn.AddListener(AssignItemID);
     }
 
     // Assign the ItemID based on the card CardID's found in the dictionary 
@@ -30,7 +38,7 @@ public class ItemManager : MonoBehaviour
     // Search the list for the item with the ItemID that matches the currently flipped cards CardID
     private void DisplayItem()
     {
-        IReadOnlyList<Card> currentlyFlipped = cardManager.CurrentlyFlipped;
+        IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
 
         Card currentlyFlippedCard = currentlyFlipped[0];
 
