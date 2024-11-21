@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -63,11 +64,16 @@ public class ItemManager : MonoBehaviour
             if (item.ItemID == currentlyFlippedCard.CardID)
             {
                 GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
-                Destroy(displayedItem, _destroyAfterTime);
-                OnObjectDestroyed?.Invoke();
+                StartCoroutine(DestroyItem(displayedItem));
             }
         }
-
         isDisplayingItem = false;
+    }
+
+    private IEnumerator DestroyItem(GameObject item)
+    {
+        yield return new WaitForSeconds(_destroyAfterTime);
+        Destroy(item);
+        OnObjectDestroyed?.Invoke();
     }
 }
