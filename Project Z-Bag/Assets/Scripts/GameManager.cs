@@ -80,19 +80,4 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Game Over");
         gameOverPanel.SetActive(true);
     }
-
-    public void LoadGameScene()
-    {
-        SceneManager.LoadScene(1);
-    }
-
-    public void LoadMainMenuScene()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    public void ExitApplication()
-    {
-        Application.Quit();
-    }
 }
