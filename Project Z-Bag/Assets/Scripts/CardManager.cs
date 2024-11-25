@@ -19,6 +19,7 @@ public class CardManager : MonoBehaviour
 
     #region Unity Events
     [HideInInspector] public UnityEvent OnCardSpawn;
+    [HideInInspector] public UnityEvent StartTimer;
     #endregion
 
     #region Private Variables
@@ -134,6 +135,8 @@ public class CardManager : MonoBehaviour
                 cardList[index].transform.rotation = Quaternion.Euler(-15f, 0f, 0f);
             }
         }
+        StartTimer?.Invoke();
+        StartCoroutine(gameManager.GameTimer());
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition, GameObject card)

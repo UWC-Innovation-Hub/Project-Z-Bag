@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,9 @@ public class GameManager : MonoBehaviour
     #region Serialized Fields
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private ItemManager itemManager;
+    [SerializeField] private CardManager cardManager;
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI scoreText;
     #endregion
 
     #region Public Fields
@@ -19,6 +23,8 @@ public class GameManager : MonoBehaviour
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
     private int _score = 0;
+    private float _startTime = 60.0f;
+    private int _levelOneScoreMax = 6;
     #endregion
 
     #region Properties
@@ -32,7 +38,25 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        itemManager.OnObjectDestroyed.AddListener(GameOver);
+        itemManager.OnObjectDestroyed.AddListener(CheckScore);
+        cardManager.StartTimer.AddListener(StartGameTimer);
+    }
+
+    private void StartGameTimer()
+    {
+        StartCoroutine(GameTimer());
+    }
+
+    public IEnumerator GameTimer()
+    {
+        while (_startTime > 0)
+        {
+            _startTime -= Time.deltaTime;
+            timerText.text = $"Time: {Mathf.Ceil(_startTime)}";
+            yield return null;
+        }
+        Debug.Log(_startTime);
+        GameOver();
     }
 
     // Adds the currently flipped card to the list. Notified by the Card.
@@ -55,15 +79,14 @@ public class GameManager : MonoBehaviour
 
         if (firstCard.CardID == secondCard.CardID)
         {
-            Debug.Log("Match found!");
             Destroy(firstCard.gameObject);
             Destroy(secondCard.gameObject);
             _score++;
+            scoreText.text = $"Score: {_score}";
             OnMatchFound.Invoke();
         }
         else
         {
-            Debug.Log("No match!");
             firstCard.FlipCardExternally();
             secondCard.FlipCardExternally();
         }
@@ -72,12 +95,15 @@ public class GameManager : MonoBehaviour
         IsChecking = false;
     }
 
+    private void CheckScore()
+    {
+        if (_score != _levelOneScoreMax)
+            return;
+        GameOver();
+    }
     private void GameOver()
     {
-        Debug.Log($"Score: {_score}");
-        if (_score != 6)
-            return;
-        Debug.Log($"Game Over");
+        StopCoroutine(GameTimer());
         gameOverPanel.SetActive(true);
     }
 }
