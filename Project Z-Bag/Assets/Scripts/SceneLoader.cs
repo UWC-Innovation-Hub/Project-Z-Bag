@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    # region SerializedFields 
     [SerializeField] private CanvasGroup canvasGroup;
-
     [SerializeField] private float fadeDuration = 1.0f;
-
     [SerializeField] private bool fadeIn = false;
+    #endregion
 
     private void Start()
     {

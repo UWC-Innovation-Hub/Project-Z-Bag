@@ -110,8 +110,6 @@ public class CardManager : MonoBehaviour
 
             index++; // Move to the next material for the next key
         }
-
-        Debug.Log("Materials assigned to all card pairs.");
     }
 
     // Moves the card from the spawned position into the grid format
@@ -136,7 +134,6 @@ public class CardManager : MonoBehaviour
             }
         }
         StartTimer?.Invoke();
-        StartCoroutine(gameManager.GameTimer());
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition, GameObject card)
@@ -165,7 +162,7 @@ public class CardManager : MonoBehaviour
     }
 
     // Flattens the dictionary so that each card can be moved better
-    private List<Card> FlattenCardPairs()
+    public List<Card> FlattenCardPairs()
     {
         List<Card> cardList = new();
         foreach (var pair in _cardPairs.Values)

@@ -8,22 +8,26 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region Serialized Fields
-    [SerializeField] private GameObject gameOverPanel;
+    [Header("Managers")]
     [SerializeField] private ItemManager itemManager;
     [SerializeField] private CardManager cardManager;
+    [Header("Text Fields")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [Header("Game Objects")]
+    [SerializeField] private GameObject gameOverPanel;
     #endregion
 
     #region Public Fields
     public bool IsChecking { get; private set; } = false; // Prevent input during checking
+    public bool IsGameOver { get; private set; } = false; // Prevent input during game over
     #endregion
 
     #region Private Fields
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
     private int _score = 0;
-    private float _startTime = 5.0f;
+    private float _startTime = 30.0f;
     private int _levelOneScoreMax = 6;
     #endregion
 
@@ -36,7 +40,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent OnMatchFound;
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         itemManager.OnObjectDestroyed.AddListener(CheckScore);
         cardManager.StartTimer.AddListener(StartGameTimer);
@@ -55,14 +59,12 @@ public class GameManager : MonoBehaviour
             timerText.text = $"Time: {Mathf.Ceil(_startTime)}";
             yield return null;
         }
-        Debug.Log(_startTime);
         GameOver();
     }
 
     // Adds the currently flipped card to the list. Notified by the Card.
     public void OnCardFlipped(Card flippedCard)
     {
-        Debug.Log("Checking if two cards are flipped");
         _currentlyFlipped.Add(flippedCard);
 
         if (_currentlyFlipped.Count == 2)
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
             Destroy(secondCard.gameObject);
             _score++;
             scoreText.text = $"Score: {_score}";
-            OnMatchFound.Invoke();
+            OnMatchFound?.Invoke();
         }
         else
         {
@@ -103,6 +105,7 @@ public class GameManager : MonoBehaviour
     }
     private void GameOver()
     {
+        IsGameOver = true;
         StopCoroutine(GameTimer());
         gameOverPanel.SetActive(true);
     }
