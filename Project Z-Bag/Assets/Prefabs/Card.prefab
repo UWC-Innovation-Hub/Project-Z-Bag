@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba1632880e79cc468ed56e41ab33537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemManager: {fileID: 0}
   cardVisual: {fileID: 5562658297171760771}
   OnCardRotation:
     m_PersistentCalls:
@@ -172,7 +173,7 @@ PrefabInstance:
     - target: {fileID: 3715339605313348977, guid: 4b233c99399961e47bae9c2de99fea18,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.01
+      value: 0.0114
       objectReference: {fileID: 0}
     - target: {fileID: 3715339605313348977, guid: 4b233c99399961e47bae9c2de99fea18,
         type: 3}
