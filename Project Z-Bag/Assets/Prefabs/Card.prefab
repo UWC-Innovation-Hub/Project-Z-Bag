@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba1632880e79cc468ed56e41ab33537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemManager: {fileID: 0}
   cardVisual: {fileID: 5562658297171760771}
   OnCardRotation:
     m_PersistentCalls:

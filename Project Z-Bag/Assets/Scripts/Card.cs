@@ -21,6 +21,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     #region Private Fields
     // References
     private GameManager gameManager;
+    private ItemManager itemManager;
 
     // Animation settings
     private readonly float _rotationAngle = 180f;
@@ -43,6 +44,8 @@ public class Card : MonoBehaviour , IPointerClickHandler
             return;
         }
 
+        itemManager = FindObjectOfType<ItemManager>();
+
         _startRotation = transform.rotation;
         _endRotation = _startRotation * Quaternion.Euler(0, 0, _rotationAngle);
     }
@@ -55,7 +58,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver)
+        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.isDisplayingItem)
         {
             StartCoroutine(FlipCard());
             gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
