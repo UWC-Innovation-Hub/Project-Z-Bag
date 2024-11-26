@@ -58,7 +58,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.isDisplayingItem)
+        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
         {
             StartCoroutine(FlipCard());
             gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
