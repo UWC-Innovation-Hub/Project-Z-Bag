@@ -27,7 +27,7 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Private fields
-    private readonly float _destroyAfterTime = 10.0f;
+    private readonly float _destroyAfterTime = 40.0f;
     #endregion
 
     private void Start()
