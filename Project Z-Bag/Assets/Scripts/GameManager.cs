@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
             return;
         GameOver();
     }
+
     private void GameOver()
     {
         IsGameOver = true;

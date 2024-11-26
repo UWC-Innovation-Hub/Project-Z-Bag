@@ -67,13 +67,13 @@ public class ItemManager : MonoBehaviour
                 StartCoroutine(DestroyItem(displayedItem));
             }
         }
-        isDisplayingItem = false;
     }
 
     private IEnumerator DestroyItem(GameObject item)
     {
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
+        isDisplayingItem = false;
         OnObjectDestroyed?.Invoke();
     }
 }
