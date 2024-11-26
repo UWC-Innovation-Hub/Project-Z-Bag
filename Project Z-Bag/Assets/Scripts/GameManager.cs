@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField] private ItemManager itemManager;
     [SerializeField] private CardManager cardManager;
+
     [Header("Text Fields")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI scoreText;
+
     [Header("Game Objects")]
     [SerializeField] private GameObject gameOverPanel;
     #endregion
