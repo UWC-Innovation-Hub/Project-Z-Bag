@@ -3,11 +3,13 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using zSpace.Core.Samples;
 
-public class Card : MonoBehaviour , IPointerClickHandler
+public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     #region Public Fields
-    public GameObject cardVisual;
+    public GameObject cardVisualTop;
+    public GameObject cardVisualBottom;
     #endregion
 
     #region Properties
@@ -22,6 +24,8 @@ public class Card : MonoBehaviour , IPointerClickHandler
     // References
     private GameManager gameManager;
     private ItemManager itemManager;
+    private Material visualTopMaterial;
+    private Material visualBottomMaterial;
 
     // Animation settings
     private readonly float _rotationAngle = 180f;
@@ -38,11 +42,14 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     private void Start()
     {
-        if (cardVisual == null)
+        if (cardVisualBottom == null || cardVisualTop == null)
         {
             Debug.LogError("Card visual not assigned.");
             return;
         }
+
+        visualTopMaterial = cardVisualTop.GetComponent<MeshRenderer>().material;
+        visualBottomMaterial = cardVisualBottom.GetComponent<MeshRenderer>().material;
 
         itemManager = FindObjectOfType<ItemManager>();
 
@@ -56,6 +63,24 @@ public class Card : MonoBehaviour , IPointerClickHandler
         this.gameManager = gameManager;
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!_isRotated)
+        {
+            visualBottomMaterial.color = HighlightBottomCard(visualBottomMaterial);
+            visualTopMaterial.color = HighlightTopCard(visualTopMaterial);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!_isRotated)
+        {
+            visualBottomMaterial.color = HighlightBottomCard(visualBottomMaterial);
+            visualTopMaterial.color = HighlightTopCard(visualTopMaterial);
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
@@ -63,6 +88,35 @@ public class Card : MonoBehaviour , IPointerClickHandler
             StartCoroutine(FlipCard());
             gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
         }
+    }
+
+    // Makes the top card visual tranparent or not transparent
+    private Color HighlightTopCard(Material cardVisualTopMaterial)
+    {
+        Color visualColour = cardVisualTopMaterial.color;
+
+        if (visualColour.a == 1)
+            visualColour.a = Mathf.Clamp(0.5f, 0, 1);
+        else
+            visualColour.a = Mathf.Clamp(1, 0, 1);
+        return visualColour;
+    }
+
+    // Makes the bottom card visual black or normal
+    private Color HighlightBottomCard(Material cardVisualBottomMaterial)
+    {
+        Color visualColour = cardVisualBottomMaterial.color;
+
+        if (visualColour.a == 1)
+            return visualColour;
+        else
+        {
+            visualColour.r = 0;
+            visualColour.g = 0;
+            visualColour.b = 0;
+            //visualColour.a = 1;
+        }
+        return visualColour;
     }
 
     // Helper function to flip the card back to its original state
