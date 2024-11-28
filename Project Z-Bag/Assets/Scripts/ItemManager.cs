@@ -24,6 +24,7 @@ public class ItemManager : MonoBehaviour
 
     #region Unity Events
     [HideInInspector] public UnityEvent OnObjectDestroyed;
+    [HideInInspector] public UnityEvent<Item> InstantiateInformationBox;
     #endregion
 
     #region Private fields
@@ -66,6 +67,7 @@ public class ItemManager : MonoBehaviour
             {
                 GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
+                InstantiateInformationBox?.Invoke(item);
             }
         }
     }
