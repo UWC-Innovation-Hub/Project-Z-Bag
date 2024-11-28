@@ -24,8 +24,7 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
     // References
     private GameManager gameManager;
     private ItemManager itemManager;
-    private Material visualTopMaterial;
-    private Material visualBottomMaterial;
+    private Outline outline;
 
     // Animation settings
     private readonly float _rotationAngle = 180f;
@@ -48,8 +47,8 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
             return;
         }
 
-        visualTopMaterial = cardVisualTop.GetComponent<MeshRenderer>().material;
-        visualBottomMaterial = cardVisualBottom.GetComponent<MeshRenderer>().material;
+        outline = gameObject.AddComponent<Outline>();
+        outline.enabled = false; 
 
         itemManager = FindObjectOfType<ItemManager>();
 
@@ -67,8 +66,10 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
     {
         if (!_isRotated)
         {
-            visualBottomMaterial.color = HighlightBottomCard(visualBottomMaterial);
-            visualTopMaterial.color = HighlightTopCard(visualTopMaterial);
+            outline.enabled = true;
+            outline.OutlineMode = Outline.Mode.OutlineAndSilhouette;
+            outline.OutlineColor = Color.white;
+            outline.OutlineWidth = 15f;
         }
     }
 
@@ -76,8 +77,7 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
     {
         if (!_isRotated)
         {
-            visualBottomMaterial.color = HighlightBottomCard(visualBottomMaterial);
-            visualTopMaterial.color = HighlightTopCard(visualTopMaterial);
+            outline.enabled = false;
         }
     }
 
@@ -88,35 +88,6 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
             StartCoroutine(FlipCard());
             gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
         }
-    }
-
-    // Makes the top card visual tranparent or not transparent
-    private Color HighlightTopCard(Material cardVisualTopMaterial)
-    {
-        Color visualColour = cardVisualTopMaterial.color;
-
-        if (visualColour.a == 1)
-            visualColour.a = Mathf.Clamp(0.5f, 0, 1);
-        else
-            visualColour.a = Mathf.Clamp(1, 0, 1);
-        return visualColour;
-    }
-
-    // Makes the bottom card visual black or normal
-    private Color HighlightBottomCard(Material cardVisualBottomMaterial)
-    {
-        Color visualColour = cardVisualBottomMaterial.color;
-
-        if (visualColour.a == 1)
-            return visualColour;
-        else
-        {
-            visualColour.r = 0;
-            visualColour.g = 0;
-            visualColour.b = 0;
-            //visualColour.a = 1;
-        }
-        return visualColour;
     }
 
     // Helper function to flip the card back to its original state
