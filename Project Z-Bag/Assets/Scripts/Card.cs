@@ -69,7 +69,7 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
             outline.enabled = true;
             outline.OutlineMode = Outline.Mode.OutlineAndSilhouette;
             outline.OutlineColor = Color.white;
-            outline.OutlineWidth = 15f;
+            outline.OutlineWidth = 7f;
         }
     }
 
@@ -118,7 +118,5 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
         transform.rotation = targetRotation;
         _isRotated = !_isRotated;
         _isRotating = false;
-
-        Debug.Log($"Card is now {(_isRotated ? "rotated" : "unrotated")}");
     }
 }

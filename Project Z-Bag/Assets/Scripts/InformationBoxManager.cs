@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +16,9 @@ public class InformationBoxManager : MonoBehaviour
 
     [Header("Spawn Configuration")]
     [SerializeField] private GameObject informationBoxSpawnPosition;
+
+    [Header("Text")]
+    [SerializeField] private TextMeshPro informationBoxText;
     #endregion
 
     #region Unity Events
@@ -22,25 +26,29 @@ public class InformationBoxManager : MonoBehaviour
     #endregion
 
     #region Private fields
-    private readonly float _destroyAfterTime = 7.0f;
+    private GameObject informationBox;
     #endregion
 
 
     private void Start()
     {
         itemManager.InstantiateInformationBox.AddListener(InstantiateInformationBox);
+        itemManager.OnObjectDestroyed.AddListener(DestroyInformationBox);
     }
 
-    private void InstantiateInformationBox(Item item)
+    private void InstantiateInformationBox()
     {
-        GameObject informationBox = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation, item.transform);
-
-        StartCoroutine(DestroyInformationBox(informationBox));
+        informationBox = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
     }
 
-    private IEnumerator DestroyInformationBox(GameObject informationBox)
+    private void DestroyInformationBox()
     {
-        yield return new WaitForSeconds(_destroyAfterTime);
-        Destroy(informationBox);
+        if (informationBox != null)
+            Destroy(informationBox);
+    }
+
+    private void DisplayText()
+    {
+        
     }
 }

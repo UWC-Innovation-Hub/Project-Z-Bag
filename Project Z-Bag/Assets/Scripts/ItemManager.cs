@@ -24,7 +24,7 @@ public class ItemManager : MonoBehaviour
 
     #region Unity Events
     [HideInInspector] public UnityEvent OnObjectDestroyed;
-    [HideInInspector] public UnityEvent<Item> InstantiateInformationBox;
+    [HideInInspector] public UnityEvent InstantiateInformationBox;
     #endregion
 
     #region Private fields
@@ -55,7 +55,6 @@ public class ItemManager : MonoBehaviour
     private void DisplayItem()
     {
         IsDisplayingItem = true;
-        Debug.Log($"{IsDisplayingItem}");
 
         IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
 
@@ -67,7 +66,7 @@ public class ItemManager : MonoBehaviour
             {
                 GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
-                InstantiateInformationBox?.Invoke(item);
+                InstantiateInformationBox?.Invoke();
             }
         }
     }
@@ -77,7 +76,6 @@ public class ItemManager : MonoBehaviour
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
         IsDisplayingItem = false;
-        Debug.Log($"{IsDisplayingItem}");
         OnObjectDestroyed?.Invoke();
     }
 }
