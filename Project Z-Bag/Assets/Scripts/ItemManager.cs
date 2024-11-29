@@ -28,6 +28,7 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Private fields
+    private GameObject displayedItem;
     private readonly float _destroyAfterTime = 7.0f;
     #endregion
 
@@ -64,7 +65,7 @@ public class ItemManager : MonoBehaviour
         {
             if (item.ItemID == currentlyFlippedCard.CardID)
             {
-                GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
+                displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
                 InstantiateInformationBox?.Invoke();
             }
@@ -77,5 +78,10 @@ public class ItemManager : MonoBehaviour
         Destroy(item);
         IsDisplayingItem = false;
         OnObjectDestroyed?.Invoke();
+    }
+
+    public Item GetItemDisplayed()
+    {
+        return displayedItem.GetComponent<Item>();
     }
 }

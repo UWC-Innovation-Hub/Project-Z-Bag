@@ -228,6 +228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   offset: {x: 3, y: 1, z: 0}
+  text: {fileID: 8846127598644300793}
 --- !u!1 &7322630253101434903
 GameObject:
   m_ObjectHideFlags: 0

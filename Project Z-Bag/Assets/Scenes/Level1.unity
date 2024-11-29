@@ -2990,6 +2990,8 @@ MonoBehaviour:
   itemManager: {fileID: 483931970}
   informationBoxPrefab: {fileID: 2153709406771153270, guid: e66f3287c39e60a48a49c4343b101d49,
     type: 3}
+  informationBox: {fileID: 5560609226823589, guid: e66f3287c39e60a48a49c4343b101d49,
+    type: 3}
   informationBoxSpawnPosition: {fileID: 80215426}
   ChooseText:
     m_PersistentCalls:

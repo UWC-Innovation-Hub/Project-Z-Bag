@@ -13,12 +13,10 @@ public class InformationBoxManager : MonoBehaviour
 
     [Header("Game Objects")]
     [SerializeField] private GameObject informationBoxPrefab;
+    [SerializeField] private InformationBox informationBox;
 
     [Header("Spawn Configuration")]
     [SerializeField] private GameObject informationBoxSpawnPosition;
-
-    [Header("Text")]
-    [SerializeField] private TextMeshPro informationBoxText;
     #endregion
 
     #region Unity Events
@@ -26,7 +24,7 @@ public class InformationBoxManager : MonoBehaviour
     #endregion
 
     #region Private fields
-    private GameObject informationBox;
+    private GameObject informationBoxDisplayed;
     #endregion
 
 
@@ -38,17 +36,44 @@ public class InformationBoxManager : MonoBehaviour
 
     private void InstantiateInformationBox()
     {
-        informationBox = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
+        informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
+        DisplayText();
     }
 
     private void DestroyInformationBox()
     {
-        if (informationBox != null)
-            Destroy(informationBox);
+        if (informationBoxDisplayed != null)
+            Destroy(informationBoxDisplayed);
     }
 
     private void DisplayText()
     {
-        
+        Item displayedItem = itemManager.GetItemDisplayed();
+
+        switch (displayedItem.ItemID)
+        {
+            case 0:
+                informationBox.text.text = "This is Earth";
+                break;
+            case 1:
+                informationBox.text.text = "This is Jupiter";
+                break;
+            case 2:
+                informationBox.text.text = "This is Mars";
+                break;
+            case 3:
+                informationBox.text.text = "This is Mercury";
+                break;
+            case 4:
+                informationBox.text.text = "This is Earth's Moon";
+                break;
+            case 5:
+                informationBox.text.text = "This is Saturn";
+                break;
+            default:
+                informationBox.text.text = "This is a planet";
+                break;
+        }
+
     }
 }
