@@ -99,10 +99,10 @@ public class CardManager : MonoBehaviour
 
             foreach (Card card in kvp.Value)
             {
-                if (card == null && card.cardVisual == null)
+                if (card == null && card.cardVisualBottom == null)
                     return;
 
-                if (card.cardVisual.TryGetComponent<Renderer>(out var renderer))
+                if (card.cardVisualBottom.TryGetComponent<Renderer>(out var renderer))
                 {
                     renderer.material = materialForKey; // Assign the material to the card's visual
                 }

@@ -57,14 +57,17 @@ public class GameManager : MonoBehaviour
     {
         while (_startTime > 0)
         {
-            _startTime -= Time.deltaTime;
+            if (!itemManager.IsDisplayingItem)
+            {
+                _startTime -= Time.deltaTime;
 
-            // Calculate minutes and seconds
-            int minutes = Mathf.FloorToInt(_startTime / 60); // Integer division to get minutes
-            int seconds = Mathf.FloorToInt(_startTime % 60); // Remainder for seconds
+                // Calculate minutes and seconds
+                int minutes = Mathf.FloorToInt(_startTime / 60); // Integer division to get minutes
+                int seconds = Mathf.FloorToInt(_startTime % 60); // Remainder for seconds
 
-            // Format time as mm:ss
-            timerText.text = $"Time: {minutes:00}:{seconds:00}";
+                // Format time as mm:ss
+                timerText.text = $"Time: {minutes:00}:{seconds:00}";
+            }
 
             yield return null;
         }

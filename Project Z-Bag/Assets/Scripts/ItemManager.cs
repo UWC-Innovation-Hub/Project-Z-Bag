@@ -19,15 +19,17 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Public fields
-    public bool isDisplayingItem { get; private set; } = false;
+    public bool IsDisplayingItem { get; private set; } = false;
     #endregion
 
     #region Unity Events
     [HideInInspector] public UnityEvent OnObjectDestroyed;
+    [HideInInspector] public UnityEvent InstantiateInformationBox;
     #endregion
 
     #region Private fields
-    private readonly float _destroyAfterTime = 40.0f;
+    private GameObject displayedItem;
+    private readonly float _destroyAfterTime = 7.0f;
     #endregion
 
     private void Start()
@@ -53,7 +55,7 @@ public class ItemManager : MonoBehaviour
     // Search the list for the item with the ItemID that matches the currently flipped cards CardID
     private void DisplayItem()
     {
-        isDisplayingItem = true;
+        IsDisplayingItem = true;
 
         IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
 
@@ -63,8 +65,9 @@ public class ItemManager : MonoBehaviour
         {
             if (item.ItemID == currentlyFlippedCard.CardID)
             {
-                GameObject displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
+                displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
+                InstantiateInformationBox?.Invoke();
             }
         }
     }
@@ -73,7 +76,12 @@ public class ItemManager : MonoBehaviour
     {
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
-        isDisplayingItem = false;
+        IsDisplayingItem = false;
         OnObjectDestroyed?.Invoke();
+    }
+
+    public Item GetItemDisplayed()
+    {
+        return displayedItem.GetComponent<Item>();
     }
 }

@@ -3,11 +3,13 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using zSpace.Core.Samples;
 
-public class Card : MonoBehaviour , IPointerClickHandler
+public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     #region Public Fields
-    public GameObject cardVisual;
+    public GameObject cardVisualTop;
+    public GameObject cardVisualBottom;
     #endregion
 
     #region Properties
@@ -22,6 +24,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     // References
     private GameManager gameManager;
     private ItemManager itemManager;
+    private Outline outline;
 
     // Animation settings
     private readonly float _rotationAngle = 180f;
@@ -38,11 +41,14 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     private void Start()
     {
-        if (cardVisual == null)
+        if (cardVisualBottom == null || cardVisualTop == null)
         {
             Debug.LogError("Card visual not assigned.");
             return;
         }
+
+        outline = gameObject.AddComponent<Outline>();
+        outline.enabled = false; 
 
         itemManager = FindObjectOfType<ItemManager>();
 
@@ -56,9 +62,28 @@ public class Card : MonoBehaviour , IPointerClickHandler
         this.gameManager = gameManager;
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!_isRotated)
+        {
+            outline.enabled = true;
+            outline.OutlineMode = Outline.Mode.OutlineAndSilhouette;
+            outline.OutlineColor = Color.white;
+            outline.OutlineWidth = 7f;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!_isRotated)
+        {
+            outline.enabled = false;
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.isDisplayingItem)
+        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
         {
             StartCoroutine(FlipCard());
             gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
@@ -93,7 +118,5 @@ public class Card : MonoBehaviour , IPointerClickHandler
         transform.rotation = targetRotation;
         _isRotated = !_isRotated;
         _isRotating = false;
-
-        Debug.Log($"Card is now {(_isRotated ? "rotated" : "unrotated")}");
     }
 }
