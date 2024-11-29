@@ -37,7 +37,7 @@ public class InformationBoxManager : MonoBehaviour
     private void InstantiateInformationBox()
     {
         informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
-        DisplayText();
+        DisplayText(itemManager.GetDisplayedItemID());
     }
 
     private void DestroyInformationBox()
@@ -46,11 +46,9 @@ public class InformationBoxManager : MonoBehaviour
             Destroy(informationBoxDisplayed);
     }
 
-    private void DisplayText()
+    private void DisplayText(int itemID)
     {
-        Item displayedItem = itemManager.GetItemDisplayed();
-
-        switch (displayedItem.ItemID)
+        switch (itemID)
         {
             case 0:
                 informationBox.text.text = "This is Earth";
