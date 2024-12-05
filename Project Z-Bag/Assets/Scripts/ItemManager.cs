@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.Progress;
 
 public class ItemManager : MonoBehaviour
 {
@@ -29,7 +30,8 @@ public class ItemManager : MonoBehaviour
 
     #region Private fields
     private GameObject displayedItem;
-    private readonly float _destroyAfterTime = 7.0f;
+    private readonly float _destroyAfterTime = 15.0f;
+    private int itemID;
     #endregion
 
     private void Start()
@@ -67,6 +69,7 @@ public class ItemManager : MonoBehaviour
             {
                 displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
+                itemID = item.ItemID;
                 InstantiateInformationBox?.Invoke();
             }
         }
@@ -80,8 +83,8 @@ public class ItemManager : MonoBehaviour
         OnObjectDestroyed?.Invoke();
     }
 
-    public Item GetItemDisplayed()
+    public int GetDisplayedItemID()
     {
-        return displayedItem.GetComponent<Item>();
+        return itemID;
     }
 }

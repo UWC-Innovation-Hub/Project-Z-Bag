@@ -37,7 +37,9 @@ public class InformationBoxManager : MonoBehaviour
     private void InstantiateInformationBox()
     {
         informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
-        DisplayText();
+        informationBox = informationBoxDisplayed.GetComponent<InformationBox>();
+        int itemID = itemManager.GetDisplayedItemID();
+        DisplayText(itemID);
     }
 
     private void DestroyInformationBox()
@@ -46,34 +48,17 @@ public class InformationBoxManager : MonoBehaviour
             Destroy(informationBoxDisplayed);
     }
 
-    private void DisplayText()
+    private void DisplayText(int itemID)
     {
-        Item displayedItem = itemManager.GetItemDisplayed();
-
-        switch (displayedItem.ItemID)
+        informationBox.text.text = itemID switch
         {
-            case 0:
-                informationBox.text.text = "This is Earth";
-                break;
-            case 1:
-                informationBox.text.text = "This is Jupiter";
-                break;
-            case 2:
-                informationBox.text.text = "This is Mars";
-                break;
-            case 3:
-                informationBox.text.text = "This is Mercury";
-                break;
-            case 4:
-                informationBox.text.text = "This is Earth's Moon";
-                break;
-            case 5:
-                informationBox.text.text = "This is Saturn";
-                break;
-            default:
-                informationBox.text.text = "This is a planet";
-                break;
-        }
-
+            0 => "This is Earth",
+            1 => "This is Jupiter",
+            2 => "This is Mars",
+            3 => "This is Mercury",
+            4 => "This is Earth's Moon",
+            5 => "This is Saturn",
+            _ => "This is a planet",
+        };
     }
 }
