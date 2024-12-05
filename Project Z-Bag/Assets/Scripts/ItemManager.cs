@@ -29,7 +29,7 @@ public class ItemManager : MonoBehaviour
 
     #region Private fields
     private GameObject displayedItem;
-    private readonly float _destroyAfterTime = 15.0f;
+    private readonly float _destroyAfterTime = 7.0f;
     private int itemID;
     #endregion
 

@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
     private int _score = 0;
-    private float _startTime = 60.0f;
+    private float _startTime = 75.0f;
     private int _levelOneScoreMax = 6;
     #endregion
 
