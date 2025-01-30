@@ -70,6 +70,8 @@ public class ItemManager : MonoBehaviour
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
                 InstantiateInformationBox?.Invoke();
+                cardManager.RemoveCard(currentlyFlippedCard.CardID);
+                cardManager.HideCards();
             }
         }
     }
@@ -80,6 +82,7 @@ public class ItemManager : MonoBehaviour
         Destroy(item);
         IsDisplayingItem = false;
         OnObjectDestroyed?.Invoke();
+        cardManager.UnhideCards();
     }
 
     public int GetDisplayedItemID()
