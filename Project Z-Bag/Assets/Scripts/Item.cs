@@ -9,7 +9,7 @@ public class Item : MonoBehaviour
     #endregion
 
     #region Properties
-    public int ItemID { get; private set; } // Unique ID for each item
+    public int ItemID { get; private set; } // Encapsulation
     #endregion
 
     private void Start()

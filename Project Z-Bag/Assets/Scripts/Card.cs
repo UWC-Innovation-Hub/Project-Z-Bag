@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using zSpace.Core.Samples;
 
-public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler // Inheritence
 {
     #region Public Fields
     public GameObject cardVisualTop;

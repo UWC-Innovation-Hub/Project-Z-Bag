@@ -20,8 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     #endregion
 
+    // Encapsulation
     #region Public Fields
-    public bool IsChecking { get; private set; } = false; // Prevent input during checking
+    public bool IsChecking { get; private set; } = false; // Prevent input during checking 
     public bool IsGameOver { get; private set; } = false; // Prevent input during game over
     #endregion
 
@@ -105,8 +106,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            firstCard.FlipCardExternally();
-            secondCard.FlipCardExternally();
+            firstCard.FlipCardExternally(); // Abstraction
+            secondCard.FlipCardExternally(); // Abstraction
         }
 
         _currentlyFlipped.Clear();
