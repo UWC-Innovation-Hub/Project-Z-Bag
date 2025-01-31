@@ -73,10 +73,11 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        GameOver();
+
         // Handle timer reaching 0
         _startTime = 0;
         timerText.text = "00:00";
-        GameOver();
     }
 
     // Adds the currently flipped card to the list. Notified by the Card.
@@ -119,12 +120,15 @@ public class GameManager : MonoBehaviour
         if (_score != _levelOneScoreMax)
             return;
         GameOver();
+        // Handle timer reaching 0
+        _startTime = 0;
+        timerText.text = "00:00";
     }
 
     private void GameOver()
     {
-        IsGameOver = true;
         StopCoroutine(GameTimer());
+        IsGameOver = true;
         gameOverPanel.SetActive(true);
     }
 }
