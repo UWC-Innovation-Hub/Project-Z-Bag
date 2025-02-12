@@ -171,4 +171,29 @@ public class CardManager : MonoBehaviour
         }
         return cardList;
     }
+
+    public void HideCards()
+    {
+        List<Card> cards = FlattenCardPairs();
+
+        foreach (Card card in cards)
+        {
+            card.gameObject.SetActive(false);
+        }
+    }
+
+    public void UnhideCards()
+    {
+        List<Card> cards = FlattenCardPairs();
+
+        foreach (Card card in cards)
+        {
+            card.gameObject.SetActive(true);
+        }
+    }
+
+    public void RemoveCard(int id)
+    {
+        _cardPairs.Remove(id);
+    }
 }
