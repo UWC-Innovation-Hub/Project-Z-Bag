@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
     private int _score = 0;
-    private float _startTime = 75.0f;
+    private float _startTime = 5.0f;
     private int _levelOneScoreMax = 6;
     #endregion
 
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
 
     #region Unity Events
     [HideInInspector] public UnityEvent OnMatchFound;
+    [HideInInspector] public UnityEvent OnGameOver;
     #endregion
 
     private void Awake()
@@ -129,6 +130,7 @@ public class GameManager : MonoBehaviour
     {
         StopCoroutine(GameTimer());
         IsGameOver = true;
+        OnGameOver?.Invoke();
         gameOverPanel.SetActive(true);
     }
 }

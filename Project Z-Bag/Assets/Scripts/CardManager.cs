@@ -42,6 +42,7 @@ public class CardManager : MonoBehaviour
     {
         SpawnCardMesh(3, 4);
         MoveCard(3, 4, _startPosition, _offset);
+        gameManager.OnGameOver.AddListener(HideCards);
     }
 
     // Spawns a collection of cards at the spawn position and then stores it in a list
