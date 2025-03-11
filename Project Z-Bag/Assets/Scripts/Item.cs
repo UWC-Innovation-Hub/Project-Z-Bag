@@ -22,8 +22,9 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-        // Rotates the item
-        gameObject.transform.Rotate(0f, 10f * Time.deltaTime, 0f, Space.Self);
+        if (gameObject.activeInHierarchy)
+            // Rotates the item
+            gameObject.transform.Rotate(0f, 10f * Time.deltaTime, 0f, Space.Self);
     }
 
     public void Initialize(int id)
