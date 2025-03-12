@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
     {
         StopCoroutine(GameTimer());
         IsGameOver = true;
-        OnGameOver?.Invoke();
+        GameEvents.TriggerHideCards();
         gameOverPanel.SetActive(true);
     }
 }

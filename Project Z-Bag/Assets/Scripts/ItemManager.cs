@@ -85,7 +85,7 @@ public class ItemManager : MonoBehaviour
                 itemID = item.ItemID;
                 InstantiateInformationBox?.Invoke();
                 cardManager.RemoveCard(currentlyFlippedCard.CardID);
-                cardManager.HideCards();
+                GameEvents.TriggerHideCards();
             }
         }
     }
@@ -96,7 +96,7 @@ public class ItemManager : MonoBehaviour
         Destroy(item);
         IsDisplayingItem = false;
         OnObjectDestroyed?.Invoke();
-        cardManager.UnhideCards();
+        GameEvents.TriggerUnhideCards();
     }
 
     public int GetDisplayedItemID()

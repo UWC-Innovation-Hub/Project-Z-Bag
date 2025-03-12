@@ -42,7 +42,38 @@ public class CardManager : MonoBehaviour
     {
         SpawnCardMesh(3, 4);
         MoveCard(3, 4, _startPosition, _offset);
-        gameManager.OnGameOver.AddListener(HideCards);
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnHideCards += HideCards;
+        GameEvents.OnUnhideCards += UnhideCards;
+    }
+
+    private void UnhideCards(object sender, System.EventArgs e)
+    {
+        List<Card> cards = FlattenCardPairs();
+
+        foreach (Card card in cards)
+        {
+            card.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnHideCards -= HideCards;
+        GameEvents.OnUnhideCards -= UnhideCards;
+    }
+
+    private void HideCards(object sender, System.EventArgs e)
+    {
+        List<Card> cards = FlattenCardPairs();
+
+        foreach (Card card in cards)
+        {
+            card.gameObject.SetActive(false);
+        }
     }
 
     // Spawns a collection of cards at the spawn position and then stores it in a list
@@ -171,16 +202,6 @@ public class CardManager : MonoBehaviour
             cardList.AddRange(pair);
         }
         return cardList;
-    }
-
-    public void HideCards()
-    {
-        List<Card> cards = FlattenCardPairs();
-
-        foreach (Card card in cards)
-        {
-            card.gameObject.SetActive(false);
-        }
     }
 
     public void UnhideCards()
