@@ -35,8 +35,22 @@ public class ItemManager : MonoBehaviour
 
     private void Start()
     {
-        gameManager.OnMatchFound.AddListener(DisplayItem);
         cardManager.OnCardSpawn.AddListener(AssignItemID);
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnMatchFound += DisplayItem;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnMatchFound -= DisplayItem;
+    }
+
+    private void DisplayItem(object sender, System.EventArgs e)
+    {
+        DisplayItem();
     }
 
     // Assign the ItemID based on the card CardID's found in the dictionary 

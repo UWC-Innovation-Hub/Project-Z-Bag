@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Unity Events
-    [HideInInspector] public UnityEvent OnMatchFound;
     [HideInInspector] public UnityEvent OnGameOver;
     #endregion
 
@@ -48,6 +47,21 @@ public class GameManager : MonoBehaviour
     {
         itemManager.OnObjectDestroyed.AddListener(CheckScore);
         cardManager.StartTimer.AddListener(StartGameTimer);
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnCardFlip += HandleCardFlip;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnCardFlip -= HandleCardFlip;
+    }
+
+    private void HandleCardFlip(object sender, Card card)
+    {
+        OnCardFlipped(card);
     }
 
     private void StartGameTimer()
@@ -82,7 +96,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Adds the currently flipped card to the list. Notified by the Card.
-    public void OnCardFlipped(Card flippedCard)
+    private void OnCardFlipped(Card flippedCard)
     {
         _currentlyFlipped.Add(flippedCard);
 
@@ -104,7 +118,7 @@ public class GameManager : MonoBehaviour
             Destroy(secondCard.gameObject);
             _score++;
             scoreText.text = $"Score: {_score}";
-            OnMatchFound?.Invoke();
+            GameEvents.TriggerMatchFound();
         }
         else
         {

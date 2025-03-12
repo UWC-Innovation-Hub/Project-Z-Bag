@@ -86,7 +86,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
         {
             StartCoroutine(FlipCard());
-            gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
+            //gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
+            GameEvents.TriggerCardFlipped(this);
         }
     }
 
