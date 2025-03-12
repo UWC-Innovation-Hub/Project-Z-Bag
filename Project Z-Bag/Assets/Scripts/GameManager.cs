@@ -45,18 +45,29 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        itemManager.OnObjectDestroyed.AddListener(CheckScore);
         cardManager.StartTimer.AddListener(StartGameTimer);
     }
 
     private void OnEnable()
     {
         GameEvents.OnCardFlip += HandleCardFlip;
+        GameEvents.OnObjectDestroyed += CheckScore;
     }
 
     private void OnDisable()
     {
         GameEvents.OnCardFlip -= HandleCardFlip;
+        GameEvents.OnObjectDestroyed -= CheckScore;
+    }
+
+    private void CheckScore(object sender, GameObject e)
+    {
+        if (_score != _levelOneScoreMax)
+            return;
+        GameOver();
+        // Handle timer reaching 0
+        _startTime = 0;
+        timerText.text = "00:00";
     }
 
     private void HandleCardFlip(object sender, Card card)
@@ -128,16 +139,6 @@ public class GameManager : MonoBehaviour
 
         _currentlyFlipped.Clear();
         IsChecking = false;
-    }
-
-    private void CheckScore()
-    {
-        if (_score != _levelOneScoreMax)
-            return;
-        GameOver();
-        // Handle timer reaching 0
-        _startTime = 0;
-        timerText.text = "00:00";
     }
 
     private void GameOver()

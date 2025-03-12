@@ -18,7 +18,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private List<Item> items = new();
     #endregion
 
-    #region Public fields
+    #region Public properties
     public bool IsDisplayingItem { get; private set; } = false;
     #endregion
 
@@ -83,7 +83,7 @@ public class ItemManager : MonoBehaviour
                 displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
-                InstantiateInformationBox?.Invoke();
+                InstantiateInformationBox?.Invoke();                // Pass item to information box manager
                 cardManager.RemoveCard(currentlyFlippedCard.CardID);
                 GameEvents.TriggerHideCards();
             }
@@ -95,7 +95,8 @@ public class ItemManager : MonoBehaviour
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
         IsDisplayingItem = false;
-        OnObjectDestroyed?.Invoke();
+        //OnObjectDestroyed?.Invoke();
+        GameEvents.TriggerOnDestroyedItem(item);
         GameEvents.TriggerUnhideCards();
     }
 

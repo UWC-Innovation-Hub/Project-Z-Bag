@@ -14,11 +14,15 @@ public class InformationBox : MonoBehaviour
     private void OnEnable()
     {
         item = FindAnyObjectByType<Item>().transform;
+        Debug.Log("Found Item");
     }
 
     private void LateUpdate()
     {
-        transform.position = item.position + offset;
+        if (item != null)
+            transform.position = item.position + offset;
+        else
+            Destroy(gameObject);
         //transform.rotation = item.rotation;
     }
 }

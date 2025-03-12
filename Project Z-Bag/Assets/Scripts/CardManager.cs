@@ -50,30 +50,10 @@ public class CardManager : MonoBehaviour
         GameEvents.OnUnhideCards += UnhideCards;
     }
 
-    private void UnhideCards(object sender, System.EventArgs e)
-    {
-        List<Card> cards = FlattenCardPairs();
-
-        foreach (Card card in cards)
-        {
-            card.gameObject.SetActive(true);
-        }
-    }
-
     private void OnDisable()
     {
         GameEvents.OnHideCards -= HideCards;
         GameEvents.OnUnhideCards -= UnhideCards;
-    }
-
-    private void HideCards(object sender, System.EventArgs e)
-    {
-        List<Card> cards = FlattenCardPairs();
-
-        foreach (Card card in cards)
-        {
-            card.gameObject.SetActive(false);
-        }
     }
 
     // Spawns a collection of cards at the spawn position and then stores it in a list
@@ -204,7 +184,17 @@ public class CardManager : MonoBehaviour
         return cardList;
     }
 
-    public void UnhideCards()
+    private void HideCards(object sender, System.EventArgs e)
+    {
+        List<Card> cards = FlattenCardPairs();
+
+        foreach (Card card in cards)
+        {
+            card.gameObject.SetActive(false);
+        }
+    }
+
+    private void UnhideCards(object sender, System.EventArgs e)
     {
         List<Card> cards = FlattenCardPairs();
 
