@@ -95,7 +95,6 @@ public class ItemManager : MonoBehaviour
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
         IsDisplayingItem = false;
-        //OnObjectDestroyed?.Invoke();
         GameEvents.TriggerOnDestroyedItem(item);
         GameEvents.TriggerUnhideCards();
     }

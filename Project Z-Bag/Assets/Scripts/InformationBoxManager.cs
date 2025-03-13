@@ -8,9 +8,6 @@ using UnityEngine.Events;
 public class InformationBoxManager : MonoBehaviour
 {
     #region Serialized Fields
-    [Header("Managers")]
-    [SerializeField] private ItemManager itemManager;
-
     [Header("Game Objects")]
     [SerializeField] private GameObject informationBoxPrefab;
     [SerializeField] private InformationBox informationBox;
@@ -23,20 +20,9 @@ public class InformationBoxManager : MonoBehaviour
     private GameObject informationBoxDisplayed;
     #endregion
 
-
-    private void Start()
-    {
-        itemManager.OnObjectDestroyed.AddListener(DestroyInformationBox);
-    }
-
     private void OnEnable()
     {
         GameEvents.OnDisplayingItem += InstantiateBox;
-    }
-
-    private void InstantiateBox(object sender, Item item)
-    {
-        InstantiateInformationBox(item);
     }
 
     private void OnDisable()
@@ -44,17 +30,16 @@ public class InformationBoxManager : MonoBehaviour
         GameEvents.OnDisplayingItem -= InstantiateBox;
     }
 
+    private void InstantiateBox(object sender, Item item)
+    {
+        InstantiateInformationBox(item);
+    }
+
     private void InstantiateInformationBox(Item item)
     {
         informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
         informationBox = informationBoxDisplayed.GetComponent<InformationBox>();
         DisplayText(item.ItemID);
-    }
-
-    private void DestroyInformationBox()
-    {
-        if (informationBoxDisplayed != null)
-            Destroy(informationBoxDisplayed);
     }
 
     private void DisplayText(int itemID)
