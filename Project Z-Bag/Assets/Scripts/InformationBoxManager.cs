@@ -19,10 +19,6 @@ public class InformationBoxManager : MonoBehaviour
     [SerializeField] private GameObject informationBoxSpawnPosition;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent ChooseText;
-    #endregion
-
     #region Private fields
     private GameObject informationBoxDisplayed;
     #endregion
@@ -30,16 +26,29 @@ public class InformationBoxManager : MonoBehaviour
 
     private void Start()
     {
-        itemManager.InstantiateInformationBox.AddListener(InstantiateInformationBox);
         itemManager.OnObjectDestroyed.AddListener(DestroyInformationBox);
     }
 
-    private void InstantiateInformationBox()
+    private void OnEnable()
+    {
+        GameEvents.OnDisplayingItem += InstantiateBox;
+    }
+
+    private void InstantiateBox(object sender, Item item)
+    {
+        InstantiateInformationBox(item);
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnDisplayingItem -= InstantiateBox;
+    }
+
+    private void InstantiateInformationBox(Item item)
     {
         informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
         informationBox = informationBoxDisplayed.GetComponent<InformationBox>();
-        int itemID = itemManager.GetDisplayedItemID();
-        DisplayText(itemID);
+        DisplayText(item.ItemID);
     }
 
     private void DestroyInformationBox()

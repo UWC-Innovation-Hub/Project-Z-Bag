@@ -83,7 +83,7 @@ public class ItemManager : MonoBehaviour
                 displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
-                InstantiateInformationBox?.Invoke();                // Pass item to information box manager
+                GameEvents.TriggerInformationBoxInstantiation(item);
                 cardManager.RemoveCard(currentlyFlippedCard.CardID);
                 GameEvents.TriggerHideCards();
             }

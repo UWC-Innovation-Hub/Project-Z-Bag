@@ -39,10 +39,6 @@ public class GameManager : MonoBehaviour
     public IReadOnlyList<Card> CurrentlyFlipped => _currentlyFlipped;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnGameOver;
-    #endregion
-
     private void Awake()
     {
         cardManager.StartTimer.AddListener(StartGameTimer);
