@@ -7,7 +7,6 @@ public class ItemManager : MonoBehaviour
     #region Serialized Fields
     [Header("Managers")]
     [SerializeField] private CardManager cardManager;
-    [SerializeField] private GameManager gameManager;
 
     [Header("Spawn Configuration")]
     [SerializeField] private GameObject itemSpawnPosition;
@@ -50,32 +49,28 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    private void DisplayItem(object sender, System.EventArgs e)
-    {
-        DisplayItem();
-    }
-
-    // Search the list for the item with the ItemID that matches the currently flipped cards CardID
-    private void DisplayItem()
+    private void DisplayItem(object sender, Card card)
     {
         IsDisplayingItem = true;
 
-        IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
-
-        Card currentlyFlippedCard = currentlyFlipped[0];
-
         foreach (Item item in items)
         {
-            if (item.ItemID == currentlyFlippedCard.CardID)
+            if (item.ItemID == card.CardID)
             {
                 displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
                 GameEvents.TriggerInformationBoxInstantiation(item);
-                GameEvents.TriggerCardRemove(currentlyFlippedCard);
+                GameEvents.TriggerCardRemove(card);
                 GameEvents.TriggerHideCards();
             }
         }
+    }
+
+    // Search the list for the item with the ItemID that matches the currently flipped cards CardID
+    private void DisplayItem()
+    {
+       
     }
 
     private IEnumerator DestroyItem(GameObject item)

@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
             Destroy(secondCard.gameObject);
             _score++;
             scoreText.text = $"Score: {_score}";
-            GameEvents.TriggerMatchFound();
+            GameEvents.TriggerMatchFound(firstCard);
         }
         else
         {

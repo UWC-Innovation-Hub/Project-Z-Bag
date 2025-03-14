@@ -5,7 +5,7 @@ public class GameEvents : MonoBehaviour
 {
     public static event EventHandler<Card> OnCardFlip;
 
-    public static event EventHandler OnMatchFound;
+    public static event EventHandler<Card> OnMatchFound;
 
     public static event EventHandler OnHideCards;
 
@@ -23,7 +23,7 @@ public class GameEvents : MonoBehaviour
  
     public static void TriggerCardFlipped(Card card) => OnCardFlip?.Invoke(null, card);
 
-    public static void TriggerMatchFound() => OnMatchFound?.Invoke(null, EventArgs.Empty);
+    public static void TriggerMatchFound(Card card) => OnMatchFound?.Invoke(null, card);
 
     public static void TriggerHideCards() => OnHideCards?.Invoke(null, EventArgs.Empty);
 
