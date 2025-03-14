@@ -17,11 +17,6 @@ public class CardManager : MonoBehaviour
     [SerializeField] private Material[] materials;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnCardSpawn;
-    [HideInInspector] public UnityEvent StartTimer;
-    #endregion
-
     #region Private Variables
     // Card data
     private readonly Dictionary<int, List<Card>> _cardPairs = new();
@@ -48,12 +43,14 @@ public class CardManager : MonoBehaviour
     {
         GameEvents.OnHideCards += HideCards;
         GameEvents.OnUnhideCards += UnhideCards;
+        GameEvents.OnItemDestroyed += DestroyCard;
     }
 
     private void OnDisable()
     {
         GameEvents.OnHideCards -= HideCards;
         GameEvents.OnUnhideCards -= UnhideCards;
+        GameEvents.OnItemDestroyed -= DestroyCard;
     }
 
     // Spawns a collection of cards at the spawn position and then stores it in a list
@@ -204,8 +201,8 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void RemoveCard(int id)
+    private void DestroyCard(object sender, Card card)
     {
-        _cardPairs.Remove(id);
+        _cardPairs.Remove(card.CardID);
     }
 }

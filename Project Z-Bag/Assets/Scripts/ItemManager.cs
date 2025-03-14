@@ -72,7 +72,7 @@ public class ItemManager : MonoBehaviour
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
                 GameEvents.TriggerInformationBoxInstantiation(item);
-                cardManager.RemoveCard(currentlyFlippedCard.CardID);
+                GameEvents.TriggerCardRemove(currentlyFlippedCard);
                 GameEvents.TriggerHideCards();
             }
         }
@@ -83,7 +83,7 @@ public class ItemManager : MonoBehaviour
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
         IsDisplayingItem = false;
-        GameEvents.TriggerOnDestroyedItem(item);
+        GameEvents.TriggerDestroyItem(item);
         GameEvents.TriggerUnhideCards();
     }
 
