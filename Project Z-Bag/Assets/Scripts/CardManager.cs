@@ -76,7 +76,6 @@ public class CardManager : MonoBehaviour
 
         AssignMaterialsToCardPairs(_cardPairs);
         GameEvents.TriggerAssignItemID();
-        //OnCardSpawn?.Invoke();
     }
 
     // Generates a list of cardIDs
@@ -146,7 +145,7 @@ public class CardManager : MonoBehaviour
                 cardList[index].transform.rotation = Quaternion.Euler(-15f, 0f, 0f);
             }
         }
-        StartTimer?.Invoke();
+        GameEvents.TriggerGameTimerStart();
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition, GameObject card)

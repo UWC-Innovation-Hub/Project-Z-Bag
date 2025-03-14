@@ -1,10 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
-using static UnityEditor.Progress;
-
 public class NewTestScript
 {
     /*private GameObject managerGameObject;

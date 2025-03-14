@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEvents : MonoBehaviour
@@ -18,6 +16,8 @@ public class GameEvents : MonoBehaviour
     public static event EventHandler<Item> OnDisplayingItem;
 
     public static event EventHandler OnCardSpawn;
+
+    public static event EventHandler OnCardsInPosition;
  
     public static void TriggerCardFlipped(Card card) => OnCardFlip?.Invoke(null, card);
 
@@ -32,4 +32,6 @@ public class GameEvents : MonoBehaviour
     public static void TriggerInformationBoxInstantiation(Item item) => OnDisplayingItem?.Invoke(null, item);
 
     public static void TriggerAssignItemID() => OnCardSpawn?.Invoke(null, EventArgs.Empty);
+
+    public static void TriggerGameTimerStart() => OnCardsInPosition?.Invoke(null, EventArgs.Empty);
 }

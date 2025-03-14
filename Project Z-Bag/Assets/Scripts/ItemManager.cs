@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ItemManager : MonoBehaviour
 {
@@ -22,21 +20,11 @@ public class ItemManager : MonoBehaviour
     public bool IsDisplayingItem { get; private set; } = false;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnObjectDestroyed;
-    [HideInInspector] public UnityEvent InstantiateInformationBox;
-    #endregion
-
     #region Private fields
     private GameObject displayedItem;
     private readonly float _destroyAfterTime = 7.0f;
     private int itemID;
     #endregion
-
-    private void Start()
-    {
-        //cardManager.OnCardSpawn.AddListener(AssignItemID);
-    }
 
     private void OnEnable()
     {

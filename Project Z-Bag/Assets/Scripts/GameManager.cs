@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,21 +37,18 @@ public class GameManager : MonoBehaviour
     public IReadOnlyList<Card> CurrentlyFlipped => _currentlyFlipped;
     #endregion
 
-    private void Awake()
-    {
-        cardManager.StartTimer.AddListener(StartGameTimer);
-    }
-
     private void OnEnable()
     {
         GameEvents.OnCardFlip += HandleCardFlip;
         GameEvents.OnObjectDestroyed += CheckScore;
+        GameEvents.OnCardsInPosition += StartGameTimer;
     }
 
     private void OnDisable()
     {
         GameEvents.OnCardFlip -= HandleCardFlip;
         GameEvents.OnObjectDestroyed -= CheckScore;
+        GameEvents.OnCardsInPosition -= StartGameTimer;
     }
 
     private void CheckScore(object sender, GameObject e)
@@ -71,7 +66,7 @@ public class GameManager : MonoBehaviour
         OnCardFlipped(card);
     }
 
-    private void StartGameTimer()
+    private void StartGameTimer(object sender, System.EventArgs e)
     {
         StartCoroutine(GameTimer());
     }
