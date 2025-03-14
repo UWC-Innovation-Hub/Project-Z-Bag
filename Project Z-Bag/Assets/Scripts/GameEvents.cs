@@ -17,6 +17,8 @@ public class GameEvents : MonoBehaviour
 
     public static event EventHandler<Item> OnDisplayingItem;
 
+    public static event EventHandler OnCardSpawn;
+ 
     public static void TriggerCardFlipped(Card card) => OnCardFlip?.Invoke(null, card);
 
     public static void TriggerMatchFound() => OnMatchFound?.Invoke(null, EventArgs.Empty);
@@ -28,4 +30,6 @@ public class GameEvents : MonoBehaviour
     public static void TriggerOnDestroyedItem(GameObject item) => OnObjectDestroyed?.Invoke(null, item);
 
     public static void TriggerInformationBoxInstantiation(Item item) => OnDisplayingItem?.Invoke(null, item);
+
+    public static void TriggerAssignItemID() => OnCardSpawn?.Invoke(null, EventArgs.Empty);
 }

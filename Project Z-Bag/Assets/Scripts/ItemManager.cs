@@ -35,26 +35,22 @@ public class ItemManager : MonoBehaviour
 
     private void Start()
     {
-        cardManager.OnCardSpawn.AddListener(AssignItemID);
+        //cardManager.OnCardSpawn.AddListener(AssignItemID);
     }
 
     private void OnEnable()
     {
         GameEvents.OnMatchFound += DisplayItem;
+        GameEvents.OnCardSpawn += AssignItemID;
     }
 
     private void OnDisable()
     {
         GameEvents.OnMatchFound -= DisplayItem;
+        GameEvents.OnCardSpawn -= AssignItemID;
     }
 
-    private void DisplayItem(object sender, System.EventArgs e)
-    {
-        DisplayItem();
-    }
-
-    // Assign the ItemID based on the card CardID's found in the dictionary 
-    private void AssignItemID()
+    private void AssignItemID(object sender, System.EventArgs e)
     {
         IReadOnlyDictionary<int, List<Card>> cardPairs = cardManager.CardPairs;
         int index = 0;
@@ -64,7 +60,11 @@ public class ItemManager : MonoBehaviour
             items[index].Initialize(key);
             index++;
         }
+    }
 
+    private void DisplayItem(object sender, System.EventArgs e)
+    {
+        DisplayItem();
     }
 
     // Search the list for the item with the ItemID that matches the currently flipped cards CardID

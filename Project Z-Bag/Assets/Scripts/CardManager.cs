@@ -75,7 +75,8 @@ public class CardManager : MonoBehaviour
         }
 
         AssignMaterialsToCardPairs(_cardPairs);
-        OnCardSpawn?.Invoke();
+        GameEvents.TriggerAssignItemID();
+        //OnCardSpawn?.Invoke();
     }
 
     // Generates a list of cardIDs
