@@ -6,10 +6,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     #region Serialized Fields
-    [Header("Managers")]
-    [SerializeField] private ItemManager itemManager;
-    [SerializeField] private CardManager cardManager;
-
     [Header("Text Fields")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -30,6 +26,7 @@ public class GameManager : MonoBehaviour
     private int _score = 0;
     private float _startTime = 60f;
     private int _levelOneScoreMax = 6;
+    private bool _itemDisplayState = false;
     #endregion
 
     #region Properties
@@ -37,20 +34,12 @@ public class GameManager : MonoBehaviour
     public IReadOnlyList<Card> CurrentlyFlipped => _currentlyFlipped;
     #endregion
 
-    private void Start()
-    {
-        // Check if managers are assigned
-        if (itemManager == null)
-            Debug.LogError("ItemManager not assined");
-        if (cardManager == null)
-            Debug.LogError("CardManager not assined");
-    }
-
     private void OnEnable()
     {
         GameEvents.OnCardFlip += HandleCardFlip;
         GameEvents.OnObjectDestroyed += CheckScore;
         GameEvents.OnCardsInPosition += StartGameTimer;
+        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplayState;
     }
 
     private void OnDisable()
@@ -58,6 +47,12 @@ public class GameManager : MonoBehaviour
         GameEvents.OnCardFlip -= HandleCardFlip;
         GameEvents.OnObjectDestroyed -= CheckScore;
         GameEvents.OnCardsInPosition -= StartGameTimer;
+        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplayState;
+    }
+
+    private void ChangeItemDisplayState(object sender, bool itemDisplayState)
+    {
+        _itemDisplayState = itemDisplayState;
     }
 
     private void CheckScore(object sender, GameObject e)
@@ -84,7 +79,7 @@ public class GameManager : MonoBehaviour
     {
         while (_startTime > 0)
         {
-            if (!ItemManager.IsDisplayingItem)
+            if (!_itemDisplayState)
             {
                 _startTime -= Time.deltaTime;
 
@@ -113,8 +108,8 @@ public class GameManager : MonoBehaviour
 
         if (_currentlyFlipped.Count == 2)
         {
+            IsChecking = true;
             GameEvents.TriggerGameStateChange(IsChecking);
-            //IsChecking = true;
             StartCoroutine(CheckForMatch(_currentlyFlipped[0], _currentlyFlipped[1]));
         }
     }
@@ -139,15 +134,15 @@ public class GameManager : MonoBehaviour
         }
 
         _currentlyFlipped.Clear();
+        IsChecking = false;
         GameEvents.TriggerGameStateChange(IsChecking);
-        //IsChecking = false;
     }
 
     private void GameOver()
     {
         StopCoroutine(GameTimer());
+        IsGameOver = true;
         GameEvents.TriggerGameStateChange(IsGameOver);
-        //IsGameOver = true;
         GameEvents.TriggerHideCards();
         gameOverPanel.SetActive(true);
     }
