@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
 
     // Encapsulation
     #region Public Fields
-    public bool IsChecking { get; private set; } = false; // Prevent input during checking 
-    public bool IsGameOver { get; private set; } = false; // Prevent input during game over
+    public static bool IsChecking { get; private set; } = false; // Prevent input during checking 
+    public static bool IsGameOver { get; private set; } = false; // Prevent input during game over
     #endregion
 
     #region Private Fields
@@ -36,6 +36,15 @@ public class GameManager : MonoBehaviour
     // Read-only access to currently flipped cards
     public IReadOnlyList<Card> CurrentlyFlipped => _currentlyFlipped;
     #endregion
+
+    private void Start()
+    {
+        // Check if managers are assigned
+        if (itemManager == null)
+            Debug.LogError("ItemManager not assined");
+        if (cardManager == null)
+            Debug.LogError("CardManager not assined");
+    }
 
     private void OnEnable()
     {
@@ -75,7 +84,7 @@ public class GameManager : MonoBehaviour
     {
         while (_startTime > 0)
         {
-            if (!itemManager.IsDisplayingItem)
+            if (!ItemManager.IsDisplayingItem)
             {
                 _startTime -= Time.deltaTime;
 
@@ -104,7 +113,8 @@ public class GameManager : MonoBehaviour
 
         if (_currentlyFlipped.Count == 2)
         {
-            IsChecking = true;
+            GameEvents.TriggerGameStateChange(IsChecking);
+            //IsChecking = true;
             StartCoroutine(CheckForMatch(_currentlyFlipped[0], _currentlyFlipped[1]));
         }
     }
@@ -129,13 +139,15 @@ public class GameManager : MonoBehaviour
         }
 
         _currentlyFlipped.Clear();
-        IsChecking = false;
+        GameEvents.TriggerGameStateChange(IsChecking);
+        //IsChecking = false;
     }
 
     private void GameOver()
     {
         StopCoroutine(GameTimer());
-        IsGameOver = true;
+        GameEvents.TriggerGameStateChange(IsGameOver);
+        //IsGameOver = true;
         GameEvents.TriggerHideCards();
         gameOverPanel.SetActive(true);
     }

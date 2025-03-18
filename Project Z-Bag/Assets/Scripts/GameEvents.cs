@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 public class GameEvents : MonoBehaviour
@@ -20,7 +21,11 @@ public class GameEvents : MonoBehaviour
     public static event EventHandler OnCardsInPosition;
 
     public static event EventHandler<Card> OnItemDestroyed;
- 
+
+    public static event EventHandler<bool> OnGameStateChange;
+
+    public static event EventHandler<bool> OnItemDisplayStateChanged;
+
     public static void TriggerCardFlipped(Card card) => OnCardFlip?.Invoke(null, card);
 
     public static void TriggerMatchFound(Card card) => OnMatchFound?.Invoke(null, card);
@@ -38,4 +43,8 @@ public class GameEvents : MonoBehaviour
     public static void TriggerGameTimerStart() => OnCardsInPosition?.Invoke(null, EventArgs.Empty);
 
     public static void TriggerCardRemove(Card card) => OnItemDestroyed?.Invoke(null, card);
+
+    public static void TriggerGameStateChange(bool stateChange) => OnGameStateChange?.Invoke(null, stateChange);
+
+    public static void TriggerDisplayingItem(bool isDisaplayingItem) => OnItemDisplayStateChanged?.Invoke(null, isDisaplayingItem);
 }

@@ -7,8 +7,6 @@ public class CardManager : MonoBehaviour
 {
     #region Serialized Fields
     [Header("Managers & Prefabs")]
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private ItemManager itemManager;
     [SerializeField] private GameObject cardPrefab;
 
     [Header("Spawn Configuration")]
@@ -63,7 +61,7 @@ public class CardManager : MonoBehaviour
         {
             GameObject cardObject = Instantiate(cardPrefab, cardSpawnPosition.position, cardSpawnPosition.transform.rotation);
             Card card = cardObject.GetComponent<Card>();
-            card.Initialise(cardIDs[i], gameManager, itemManager);
+            card.Initialise(cardIDs[i]);
 
             if (!_cardPairs.ContainsKey(cardIDs[i]))
                 _cardPairs[cardIDs[i]] = new List<Card>();

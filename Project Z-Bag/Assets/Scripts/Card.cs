@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler // Inheritence
 {
     #region Public Fields
-    [SerializeField] private GameObject cardVisualTop;
-    [SerializeField] private GameObject cardVisualBottom;
+    public GameObject cardVisualTop;
+    public GameObject cardVisualBottom;
     #endregion
 
     #region Properties
@@ -16,8 +16,6 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     #region Private Fields
     // References
-    private GameManager gameManager;
-    private ItemManager itemManager;
     private Outline outline;
 
     // Animation settings
@@ -27,6 +25,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     // State
     private bool _isRotating = false;
     private bool _isRotated = false;
+    private bool _isChecking = false;
+    private bool _isGameOver = false;
+    private bool _isDisplayingItem = false;
 
     // Rotation data
     private Quaternion _startRotation;
@@ -44,17 +45,49 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         outline = gameObject.AddComponent<Outline>();
         outline.enabled = false; 
 
-        itemManager = FindObjectOfType<ItemManager>();
-
         _startRotation = transform.rotation;
         _endRotation = _startRotation * Quaternion.Euler(0, 0, ROTATIONANGLE);
     }
 
-    public void Initialise(int id, GameManager gameManager, ItemManager itemManager)
+    private void OnEnable()
+    {
+        GameEvents.OnGameStateChange += ChangeMatchCheckingState;
+        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplaying;
+        GameEvents.OnGameStateChange += ChangeGameOverState;
+    }
+
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameStateChange -= ChangeMatchCheckingState;
+        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplaying;
+        GameEvents.OnGameStateChange -= ChangeGameOverState;
+    }
+
+    private void ChangeGameOverState(object sender, bool isGameOver)
+    {
+        if (sender == null)
+            return;
+        _isGameOver = isGameOver;
+    }
+
+    private void ChangeItemDisplaying(object sender, bool isDisplaying)
+    {
+        if (sender == null)
+            return;
+        _isDisplayingItem = isDisplaying;
+    }
+
+    private void ChangeMatchCheckingState(object sender, bool isCheckingState)
+    {
+        if (sender == null)
+            return;
+        _isChecking = isCheckingState;
+    }
+
+    public void Initialise(int id)
     {
         CardID = id;
-        this.gameManager = gameManager;
-        this.itemManager = itemManager;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -78,7 +111,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
+        if (!_isRotating && !_isChecking && !_isRotated && !_isGameOver && !_isDisplayingItem)
         {
             StartCoroutine(FlipCard());
             GameEvents.TriggerCardFlipped(this);

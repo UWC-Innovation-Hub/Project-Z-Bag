@@ -16,7 +16,7 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Public properties
-    public bool IsDisplayingItem { get; private set; } = false;
+    public static bool IsDisplayingItem { get; private set; } = false;
     #endregion
 
     #region Private fields
@@ -51,7 +51,8 @@ public class ItemManager : MonoBehaviour
 
     private void DisplayItem(object sender, Card card)
     {
-        IsDisplayingItem = true;
+        GameEvents.TriggerDisplayingItem(IsDisplayingItem);
+        //IsDisplayingItem = true;
 
         foreach (Item item in items)
         {
@@ -67,17 +68,12 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    // Search the list for the item with the ItemID that matches the currently flipped cards CardID
-    private void DisplayItem()
-    {
-       
-    }
-
     private IEnumerator DestroyItem(GameObject item)
     {
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
-        IsDisplayingItem = false;
+        GameEvents.TriggerDisplayingItem(IsDisplayingItem);
+        //IsDisplayingItem = false;
         GameEvents.TriggerDestroyItem(item);
         GameEvents.TriggerUnhideCards();
     }
