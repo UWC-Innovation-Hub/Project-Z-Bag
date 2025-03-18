@@ -9,8 +9,18 @@ public class InformationBox : MonoBehaviour
 
     private void OnEnable()
     {
-        item = FindAnyObjectByType<Item>().transform;
-        Debug.Log("Found Item");
+        GameEvents.OnDisplayingItem += AssignItemReference;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnDisplayingItem -= AssignItemReference;
+    }
+
+    private void AssignItemReference(object sender, Item item)
+    {
+        this.item = item.transform;
+        Debug.Log("Item assigned");
     }
 
     private void LateUpdate()
@@ -19,6 +29,5 @@ public class InformationBox : MonoBehaviour
             transform.position = item.position + offset;
         else
             Destroy(gameObject);
-        //transform.rotation = item.rotation;
     }
 }
