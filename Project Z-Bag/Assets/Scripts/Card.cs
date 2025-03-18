@@ -52,7 +52,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private void OnEnable()
     {
         GameEvents.OnGameStateChange += ChangeMatchCheckingState;
-        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplaying;
+        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplayState;
         GameEvents.OnGameStateChange += ChangeGameOverState;
     }
 
@@ -60,7 +60,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private void OnDisable()
     {
         GameEvents.OnGameStateChange -= ChangeMatchCheckingState;
-        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplaying;
+        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplayState;
         GameEvents.OnGameStateChange -= ChangeGameOverState;
     }
 
@@ -71,7 +71,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         _isGameOver = isGameOver;
     }
 
-    private void ChangeItemDisplaying(object sender, bool isDisplaying)
+    private void ChangeItemDisplayState(object sender, bool isDisplaying)
     {
         if (sender == null)
             return;
