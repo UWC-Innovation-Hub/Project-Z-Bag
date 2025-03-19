@@ -547,7 +547,7 @@ Transform:
   m_GameObject: {fileID: 258507012}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: -1, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1275,8 +1275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec4bd1ed0d0b1f418376f78c1c8b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1553352683}
-  itemManager: {fileID: 483931970}
   cardPrefab: {fileID: 2683480832845368359, guid: bd723dea3929c3f4185150af74bf4065,
     type: 3}
   cardSpawnPosition: {fileID: 1367529785}
@@ -2052,7 +2050,7 @@ Transform:
   m_GameObject: {fileID: 1367529784}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 12}
+  m_LocalPosition: {x: -1, y: 4, z: 12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2160,8 +2158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f200faf79ffebce4d8ff642f7cca6976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemManager: {fileID: 483931970}
-  cardManager: {fileID: 826006363}
   timerText: {fileID: 1888129980}
   scoreText: {fileID: 1851010375}
   gameOverPanel: {fileID: 1736738012}

@@ -9,19 +9,21 @@ public class InformationBox : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnDisplayingItem += AssignItemReference;
+        //GameEvents.OnDisplayingItem += AssignItemReference;
+        item = FindAnyObjectByType<Item>().transform;
+        Debug.Log("Found Item");
     }
 
-    private void OnDisable()
+    /*private void OnDisable()
     {
-        GameEvents.OnDisplayingItem -= AssignItemReference;
-    }
+        //GameEvents.OnDisplayingItem -= AssignItemReference;
+    }*/
 
-    private void AssignItemReference(object sender, Item item)
+    /*private void AssignItemReference(object sender, Item item)
     {
         this.item = item.transform;
         Debug.Log("Item assigned");
-    }
+    }*/
 
     private void LateUpdate()
     {
