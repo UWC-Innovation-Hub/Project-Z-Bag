@@ -547,7 +547,7 @@ Transform:
   m_GameObject: {fileID: 258507012}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: -1, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1140,7 +1140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardManager: {fileID: 826006363}
-  gameManager: {fileID: 1553352683}
   itemSpawnPosition: {fileID: 258507012}
   items:
   - {fileID: -6364012373780598528, guid: b8d991d104bfbef43ac94a259468e9b1, type: 3}
@@ -1149,12 +1148,6 @@ MonoBehaviour:
   - {fileID: -6364012373780598528, guid: 0e7a7a6af1a91134984e43441ba278be, type: 3}
   - {fileID: -6364012373780598528, guid: cebac1bb3292e4d4a9de790d374830b8, type: 3}
   - {fileID: -6364012373780598528, guid: 422d738c72b49984da5ab9b7a3aa03d2, type: 3}
-  OnObjectDestroyed:
-    m_PersistentCalls:
-      m_Calls: []
-  InstantiateInformationBox:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &483931971
 Transform:
   m_ObjectHideFlags: 0
@@ -1282,7 +1275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec4bd1ed0d0b1f418376f78c1c8b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1553352683}
   cardPrefab: {fileID: 2683480832845368359, guid: bd723dea3929c3f4185150af74bf4065,
     type: 3}
   cardSpawnPosition: {fileID: 1367529785}
@@ -1293,12 +1285,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3b9fb746829b964479d11b4a02cd5a7b, type: 2}
   - {fileID: 2100000, guid: 87d86ff4c22b81244a9813442ade4395, type: 2}
   - {fileID: 2100000, guid: a4793b1ee0b757e458bb7092dfe23572, type: 2}
-  OnCardSpawn:
-    m_PersistentCalls:
-      m_Calls: []
-  StartTimer:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &847497889
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,7 +2050,7 @@ Transform:
   m_GameObject: {fileID: 1367529784}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 12}
+  m_LocalPosition: {x: -1, y: 4, z: 12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2172,14 +2158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f200faf79ffebce4d8ff642f7cca6976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemManager: {fileID: 483931970}
-  cardManager: {fileID: 826006363}
   timerText: {fileID: 1888129980}
   scoreText: {fileID: 1851010375}
   gameOverPanel: {fileID: 1736738012}
-  OnMatchFound:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1553352684
 Transform:
   m_ObjectHideFlags: 0
@@ -3282,15 +3263,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83b9f34dd8bb822478c9094adc1bb93b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemManager: {fileID: 483931970}
   informationBoxPrefab: {fileID: 2153709406771153270, guid: e66f3287c39e60a48a49c4343b101d49,
     type: 3}
   informationBox: {fileID: 5560609226823589, guid: e66f3287c39e60a48a49c4343b101d49,
     type: 3}
   informationBoxSpawnPosition: {fileID: 80215426}
-  ChooseText:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &2050791936
 Transform:
   m_ObjectHideFlags: 0

@@ -1,16 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class InformationBoxManager : MonoBehaviour
 {
     #region Serialized Fields
-    [Header("Managers")]
-    [SerializeField] private ItemManager itemManager;
-
     [Header("Game Objects")]
     [SerializeField] private GameObject informationBoxPrefab;
     [SerializeField] private InformationBox informationBox;
@@ -19,33 +11,30 @@ public class InformationBoxManager : MonoBehaviour
     [SerializeField] private GameObject informationBoxSpawnPosition;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent ChooseText;
-    #endregion
-
     #region Private fields
     private GameObject informationBoxDisplayed;
     #endregion
 
-
-    private void Start()
+    private void OnEnable()
     {
-        itemManager.InstantiateInformationBox.AddListener(InstantiateInformationBox);
-        itemManager.OnObjectDestroyed.AddListener(DestroyInformationBox);
+        GameEvents.OnDisplayingItem += InstantiateBox;
     }
 
-    private void InstantiateInformationBox()
+    private void OnDisable()
+    {
+        GameEvents.OnDisplayingItem -= InstantiateBox;
+    }
+
+    private void InstantiateBox(object sender, Item item)
+    {
+        InstantiateInformationBox(item);
+    }
+
+    private void InstantiateInformationBox(Item item)
     {
         informationBoxDisplayed = (GameObject)Instantiate(informationBoxPrefab, informationBoxSpawnPosition.transform.position, informationBoxSpawnPosition.transform.rotation);
         informationBox = informationBoxDisplayed.GetComponent<InformationBox>();
-        int itemID = itemManager.GetDisplayedItemID();
-        DisplayText(itemID);
-    }
-
-    private void DestroyInformationBox()
-    {
-        if (informationBoxDisplayed != null)
-            Destroy(informationBoxDisplayed);
+        DisplayText(item.ItemID);
     }
 
     private void DisplayText(int itemID)

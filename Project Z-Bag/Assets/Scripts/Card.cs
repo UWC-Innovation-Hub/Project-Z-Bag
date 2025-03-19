@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using zSpace.Core.Samples;
 
-public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler // Inheritence
+public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler // Inheritence
 {
     #region Public Fields
     public GameObject cardVisualTop;
@@ -16,23 +14,20 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
     public int CardID { get; private set; } // Unique ID for each card
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent<Card> OnCardRotation;
-    #endregion
-
     #region Private Fields
     // References
-    private GameManager gameManager;
-    private ItemManager itemManager;
     private Outline outline;
 
     // Animation settings
-    private readonly float _rotationAngle = 180f;
-    private readonly float _duration = 0.5f;
+    private const float ROTATIONANGLE = 180f;
+    private const float DURATION = 0.5f;
 
     // State
     private bool _isRotating = false;
     private bool _isRotated = false;
+    private bool _isChecking = false;
+    private bool _isGameOver = false;
+    private bool _isDisplayingItem = false;
 
     // Rotation data
     private Quaternion _startRotation;
@@ -50,16 +45,49 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
         outline = gameObject.AddComponent<Outline>();
         outline.enabled = false; 
 
-        itemManager = FindObjectOfType<ItemManager>();
-
         _startRotation = transform.rotation;
-        _endRotation = _startRotation * Quaternion.Euler(0, 0, _rotationAngle);
+        _endRotation = _startRotation * Quaternion.Euler(0, 0, ROTATIONANGLE);
     }
 
-    public void Initialise(int id, GameManager gameManager)
+    private void OnEnable()
+    {
+        GameEvents.OnGameStateChange += ChangeMatchCheckingState;
+        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplayState;
+        GameEvents.OnGameStateChange += ChangeGameOverState;
+    }
+
+
+    private void OnDisable()
+    {
+        GameEvents.OnGameStateChange -= ChangeMatchCheckingState;
+        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplayState;
+        GameEvents.OnGameStateChange -= ChangeGameOverState;
+    }
+
+    private void ChangeGameOverState(object sender, bool isGameOver)
+    {
+        if (sender == null)
+            return;
+        _isGameOver = isGameOver;
+    }
+
+    private void ChangeItemDisplayState(object sender, bool isDisplaying)
+    {
+        if (sender == null)
+            return;
+        _isDisplayingItem = isDisplaying;
+    }
+
+    private void ChangeMatchCheckingState(object sender, bool isCheckingState)
+    {
+        if (sender == null)
+            return;
+        _isChecking = isCheckingState;
+    }
+
+    public void Initialise(int id)
     {
         CardID = id;
-        this.gameManager = gameManager;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -83,10 +111,10 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!_isRotating && !gameManager.IsChecking && !_isRotated && !gameManager.IsGameOver && !itemManager.IsDisplayingItem)
+        if (!_isRotating && !_isChecking && !_isRotated && !_isGameOver && !_isDisplayingItem)
         {
             StartCoroutine(FlipCard());
-            gameManager.OnCardFlipped(this); // Notify the gameManager about the flip
+            GameEvents.TriggerCardFlipped(this);
         }
     }
 
@@ -106,9 +134,9 @@ public class Card : MonoBehaviour , IPointerClickHandler, IPointerEnterHandler, 
         Quaternion initialRotation = _isRotated ? _endRotation : _startRotation;
         Quaternion targetRotation = _isRotated ? _startRotation : _endRotation;
 
-        while (elapsedTime < _duration)
+        while (elapsedTime < DURATION)
         {
-            float t = Mathf.Clamp01(elapsedTime / _duration); // Ensures 't' stays in [0, 1]
+            float t = Mathf.Clamp01(elapsedTime / DURATION); // Ensures 't' stays in [0, 1]
             transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
             yield return null;

@@ -2,16 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     #region Serialized Fields
-    [Header("Managers")]
-    [SerializeField] private ItemManager itemManager;
-    [SerializeField] private CardManager cardManager;
-
     [Header("Text Fields")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -30,8 +24,9 @@ public class GameManager : MonoBehaviour
     // Tracks the currently flipped cards
     private readonly List<Card> _currentlyFlipped = new();
     private int _score = 0;
-    private float _startTime = 75.0f;
+    private float _startTime = 60f;
     private int _levelOneScoreMax = 6;
+    private bool _itemDisplayState = false;
     #endregion
 
     #region Properties
@@ -39,17 +34,43 @@ public class GameManager : MonoBehaviour
     public IReadOnlyList<Card> CurrentlyFlipped => _currentlyFlipped;
     #endregion
 
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnMatchFound;
-    #endregion
-
-    private void Awake()
+    private void OnEnable()
     {
-        itemManager.OnObjectDestroyed.AddListener(CheckScore);
-        cardManager.StartTimer.AddListener(StartGameTimer);
+        GameEvents.OnCardFlip += HandleCardFlip;
+        GameEvents.OnObjectDestroyed += CheckScore;
+        GameEvents.OnCardsInPosition += StartGameTimer;
+        GameEvents.OnItemDisplayStateChanged += ChangeItemDisplayState;
     }
 
-    private void StartGameTimer()
+    private void OnDisable()
+    {
+        GameEvents.OnCardFlip -= HandleCardFlip;
+        GameEvents.OnObjectDestroyed -= CheckScore;
+        GameEvents.OnCardsInPosition -= StartGameTimer;
+        GameEvents.OnItemDisplayStateChanged -= ChangeItemDisplayState;
+    }
+
+    private void ChangeItemDisplayState(object sender, bool itemDisplayState)
+    {
+        _itemDisplayState = itemDisplayState;
+    }
+
+    private void CheckScore(object sender, GameObject e)
+    {
+        if (_score != _levelOneScoreMax)
+            return;
+        GameOver();
+        // Handle timer reaching 0
+        _startTime = 0;
+        timerText.text = "00:00";
+    }
+
+    private void HandleCardFlip(object sender, Card card)
+    {
+        OnCardFlipped(card);
+    }
+
+    private void StartGameTimer(object sender, System.EventArgs e)
     {
         StartCoroutine(GameTimer());
     }
@@ -58,7 +79,7 @@ public class GameManager : MonoBehaviour
     {
         while (_startTime > 0)
         {
-            if (!itemManager.IsDisplayingItem)
+            if (!_itemDisplayState)
             {
                 _startTime -= Time.deltaTime;
 
@@ -81,13 +102,14 @@ public class GameManager : MonoBehaviour
     }
 
     // Adds the currently flipped card to the list. Notified by the Card.
-    public void OnCardFlipped(Card flippedCard)
+    private void OnCardFlipped(Card flippedCard)
     {
         _currentlyFlipped.Add(flippedCard);
 
         if (_currentlyFlipped.Count == 2)
         {
             IsChecking = true;
+            GameEvents.TriggerGameStateChange(IsChecking);
             StartCoroutine(CheckForMatch(_currentlyFlipped[0], _currentlyFlipped[1]));
         }
     }
@@ -103,7 +125,7 @@ public class GameManager : MonoBehaviour
             Destroy(secondCard.gameObject);
             _score++;
             scoreText.text = $"Score: {_score}";
-            OnMatchFound?.Invoke();
+            GameEvents.TriggerMatchFound(firstCard);
         }
         else
         {
@@ -113,22 +135,15 @@ public class GameManager : MonoBehaviour
 
         _currentlyFlipped.Clear();
         IsChecking = false;
-    }
-
-    private void CheckScore()
-    {
-        if (_score != _levelOneScoreMax)
-            return;
-        GameOver();
-        // Handle timer reaching 0
-        _startTime = 0;
-        timerText.text = "00:00";
+        GameEvents.TriggerGameStateChange(IsChecking);
     }
 
     private void GameOver()
     {
         StopCoroutine(GameTimer());
         IsGameOver = true;
+        GameEvents.TriggerGameStateChange(IsGameOver);
+        GameEvents.TriggerHideCards();
         gameOverPanel.SetActive(true);
     }
 }

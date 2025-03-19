@@ -1,15 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ItemManager : MonoBehaviour
 {
     #region Serialized Fields
     [Header("Managers")]
     [SerializeField] private CardManager cardManager;
-    [SerializeField] private GameManager gameManager;
 
     [Header("Spawn Configuration")]
     [SerializeField] private GameObject itemSpawnPosition;
@@ -18,13 +15,8 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private List<Item> items = new();
     #endregion
 
-    #region Public fields
+    #region Public properties
     public bool IsDisplayingItem { get; private set; } = false;
-    #endregion
-
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnObjectDestroyed;
-    [HideInInspector] public UnityEvent InstantiateInformationBox;
     #endregion
 
     #region Private fields
@@ -33,14 +25,19 @@ public class ItemManager : MonoBehaviour
     private int itemID;
     #endregion
 
-    private void Start()
+    private void OnEnable()
     {
-        gameManager.OnMatchFound.AddListener(DisplayItem);
-        cardManager.OnCardSpawn.AddListener(AssignItemID);
+        GameEvents.OnMatchFound += DisplayItem;
+        GameEvents.OnCardSpawn += AssignItemID;
     }
 
-    // Assign the ItemID based on the card CardID's found in the dictionary 
-    private void AssignItemID()
+    private void OnDisable()
+    {
+        GameEvents.OnMatchFound -= DisplayItem;
+        GameEvents.OnCardSpawn -= AssignItemID;
+    }
+
+    private void AssignItemID(object sender, System.EventArgs e)
     {
         IReadOnlyDictionary<int, List<Card>> cardPairs = cardManager.CardPairs;
         int index = 0;
@@ -50,28 +47,23 @@ public class ItemManager : MonoBehaviour
             items[index].Initialize(key);
             index++;
         }
-
     }
 
-    // Search the list for the item with the ItemID that matches the currently flipped cards CardID
-    private void DisplayItem()
+    private void DisplayItem(object sender, Card card)
     {
         IsDisplayingItem = true;
-
-        IReadOnlyList<Card> currentlyFlipped = gameManager.CurrentlyFlipped;
-
-        Card currentlyFlippedCard = currentlyFlipped[0];
+        GameEvents.TriggerDisplayingItem(IsDisplayingItem);
 
         foreach (Item item in items)
         {
-            if (item.ItemID == currentlyFlippedCard.CardID)
+            if (item.ItemID == card.CardID)
             {
                 displayedItem = (GameObject)Instantiate(item.gameObject, itemSpawnPosition.transform.position, itemSpawnPosition.transform.rotation);
                 StartCoroutine(DestroyItem(displayedItem));
                 itemID = item.ItemID;
-                InstantiateInformationBox?.Invoke();
-                cardManager.RemoveCard(currentlyFlippedCard.CardID);
-                cardManager.HideCards();
+                GameEvents.TriggerInformationBoxInstantiation(item);
+                GameEvents.TriggerCardRemove(card);
+                GameEvents.TriggerHideCards();
             }
         }
     }
@@ -81,8 +73,9 @@ public class ItemManager : MonoBehaviour
         yield return new WaitForSeconds(_destroyAfterTime);
         Destroy(item);
         IsDisplayingItem = false;
-        OnObjectDestroyed?.Invoke();
-        cardManager.UnhideCards();
+        GameEvents.TriggerDisplayingItem(IsDisplayingItem);
+        GameEvents.TriggerDestroyItem(item);
+        GameEvents.TriggerUnhideCards();
     }
 
     public int GetDisplayedItemID()

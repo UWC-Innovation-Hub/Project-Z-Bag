@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class InformationBox : MonoBehaviour
 {
@@ -13,12 +9,27 @@ public class InformationBox : MonoBehaviour
 
     private void OnEnable()
     {
+        //GameEvents.OnDisplayingItem += AssignItemReference;
         item = FindAnyObjectByType<Item>().transform;
+        Debug.Log("Found Item");
     }
+
+    /*private void OnDisable()
+    {
+        //GameEvents.OnDisplayingItem -= AssignItemReference;
+    }*/
+
+    /*private void AssignItemReference(object sender, Item item)
+    {
+        this.item = item.transform;
+        Debug.Log("Item assigned");
+    }*/
 
     private void LateUpdate()
     {
-        transform.position = item.position + offset;
-        //transform.rotation = item.rotation;
+        if (item != null)
+            transform.position = item.position + offset;
+        else
+            Destroy(gameObject);
     }
 }

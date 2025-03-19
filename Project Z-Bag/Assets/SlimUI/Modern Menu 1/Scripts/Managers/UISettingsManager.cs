@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
-namespace SlimUI.ModernMenu{
-	public class UISettingsManager : MonoBehaviour {
+namespace SlimUI.ModernMenu
+{
+    public class UISettingsManager : MonoBehaviour {
 
 		public enum Platform {Desktop, Mobile};
 		public Platform platform;

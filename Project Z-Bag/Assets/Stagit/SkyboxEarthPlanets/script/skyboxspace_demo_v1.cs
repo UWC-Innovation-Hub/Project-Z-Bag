@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class skyboxspace_demo_v1 : MonoBehaviour
 {

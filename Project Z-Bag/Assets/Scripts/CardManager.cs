@@ -7,7 +7,6 @@ public class CardManager : MonoBehaviour
 {
     #region Serialized Fields
     [Header("Managers & Prefabs")]
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject cardPrefab;
 
     [Header("Spawn Configuration")]
@@ -15,11 +14,6 @@ public class CardManager : MonoBehaviour
 
     [Header("Materials")]
     [SerializeField] private Material[] materials;
-    #endregion
-
-    #region Unity Events
-    [HideInInspector] public UnityEvent OnCardSpawn;
-    [HideInInspector] public UnityEvent StartTimer;
     #endregion
 
     #region Private Variables
@@ -44,6 +38,20 @@ public class CardManager : MonoBehaviour
         MoveCard(3, 4, _startPosition, _offset);
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnHideCards += HideCards;
+        GameEvents.OnUnhideCards += UnhideCards;
+        GameEvents.OnItemDestroyed += DestroyCard;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnHideCards -= HideCards;
+        GameEvents.OnUnhideCards -= UnhideCards;
+        GameEvents.OnItemDestroyed -= DestroyCard;
+    }
+
     // Spawns a collection of cards at the spawn position and then stores it in a list
     private void SpawnCardMesh(int rows, int columns)
     {
@@ -53,7 +61,7 @@ public class CardManager : MonoBehaviour
         {
             GameObject cardObject = Instantiate(cardPrefab, cardSpawnPosition.position, cardSpawnPosition.transform.rotation);
             Card card = cardObject.GetComponent<Card>();
-            card.Initialise(cardIDs[i], gameManager);
+            card.Initialise(cardIDs[i]);
 
             if (!_cardPairs.ContainsKey(cardIDs[i]))
                 _cardPairs[cardIDs[i]] = new List<Card>();
@@ -63,7 +71,7 @@ public class CardManager : MonoBehaviour
         }
 
         AssignMaterialsToCardPairs(_cardPairs);
-        OnCardSpawn?.Invoke();
+        GameEvents.TriggerAssignItemID();
     }
 
     // Generates a list of cardIDs
@@ -133,7 +141,7 @@ public class CardManager : MonoBehaviour
                 cardList[index].transform.rotation = Quaternion.Euler(-15f, 0f, 0f);
             }
         }
-        StartTimer?.Invoke();
+        GameEvents.TriggerGameTimerStart();
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition, GameObject card)
@@ -172,7 +180,7 @@ public class CardManager : MonoBehaviour
         return cardList;
     }
 
-    public void HideCards()
+    private void HideCards(object sender, System.EventArgs e)
     {
         List<Card> cards = FlattenCardPairs();
 
@@ -182,7 +190,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void UnhideCards()
+    private void UnhideCards(object sender, System.EventArgs e)
     {
         List<Card> cards = FlattenCardPairs();
 
@@ -192,8 +200,8 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void RemoveCard(int id)
+    private void DestroyCard(object sender, Card card)
     {
-        _cardPairs.Remove(id);
+        _cardPairs.Remove(card.CardID);
     }
 }
