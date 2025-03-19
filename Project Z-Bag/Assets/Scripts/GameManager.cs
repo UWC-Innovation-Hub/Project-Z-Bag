@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     // Encapsulation
     #region Public Fields
-    public static bool IsChecking { get; private set; } = false; // Prevent input during checking 
-    public static bool IsGameOver { get; private set; } = false; // Prevent input during game over
+    public bool IsChecking { get; private set; } = false; // Prevent input during checking 
+    public bool IsGameOver { get; private set; } = false; // Prevent input during game over
     #endregion
 
     #region Private Fields
